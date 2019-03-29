@@ -13,6 +13,10 @@ import expressValidator from "express-validator";
 import bluebird from "bluebird";
 import { MONGODB_URI, SESSION_SECRET } from "./util/secrets";
 import { Response, Request, NextFunction } from "express";
+import React from "react";
+import { renderToString } from "react-dom/server";
+import { StaticRouter } from "react-router";
+import App from "./client/app";
 
 const MongoStore = mongo(session);
 
@@ -28,6 +32,7 @@ import * as contactController from "./controllers/contact";
 
 // API keys and Passport configuration
 import * as passportConfig from "./config/passport";
+import { layout } from "./layout";
 
 // Create Express server
 const app = express();
@@ -44,8 +49,6 @@ mongoose.connect(mongoUrl, { useMongoClient: true }).then(
 
 // Express configuration
 app.set("port", process.env.PORT || 3000);
-app.set("views", path.join(__dirname, "../views"));
-app.set("view engine", "pug");
 app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -82,10 +85,31 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   }
   next();
 });
-
 app.use(
   express.static(path.join(__dirname, "public"), { maxAge: 31557600000 })
 );
+app.use((req: Request, res: Response) => {
+  const context: any = {};
+  // TODO: why the JSX syntax cannot be compiled here?
+  const JSX = React.createElement;
+  const html: string = renderToString(
+    JSX(
+      StaticRouter,
+      {location: req.url, context: context},
+      JSX(App, undefined)
+    )
+  );
+
+  if (context.url) {
+    res.writeHead(301, {
+      Location: context.url
+    });
+    res.end();
+  } else {
+    res.write(layout(html));
+    res.end();
+  }
+});
 
 /**
  * Primary app routes.
