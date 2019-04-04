@@ -1,7 +1,6 @@
 import express from "express";
 import compression from "compression";  // compresses requests
 import session from "express-session";
-import bodyParser from "body-parser";
 import lusca from "lusca";
 import dotenv from "dotenv";
 import mongo from "connect-mongo";
@@ -33,6 +32,8 @@ import * as contactController from "./controllers/contact";
 // API keys and Passport configuration
 import * as passportConfig from "./config/passport";
 import { layout } from "./layout";
+import login from "./routes/login";
+import signup from "./routes/signup";
 
 // Create Express server
 const app = express();
@@ -50,8 +51,8 @@ mongoose.connect(mongoUrl, { useMongoClient: true }).then(
 // Express configuration
 app.set("port", process.env.PORT);
 app.use(compression());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(expressValidator());
 app.use(session({
   resave: true,
@@ -115,15 +116,13 @@ app.use((req: Request, res: Response) => {
  * Primary app routes.
  */
 app.get("/", homeController.index);
-app.get("/login", userController.getLogin);
-app.post("/login", userController.postLogin);
+app.use("/login", login);
+app.use("/signup", signup);
 app.get("/logout", userController.logout);
 app.get("/forgot", userController.getForgot);
 app.post("/forgot", userController.postForgot);
 app.get("/reset/:token", userController.getReset);
 app.post("/reset/:token", userController.postReset);
-app.get("/signup", userController.getSignup);
-app.post("/signup", userController.postSignup);
 app.get("/contact", contactController.getContact);
 app.post("/contact", contactController.postContact);
 app.get("/account", passportConfig.isAuthenticated, userController.getAccount);
