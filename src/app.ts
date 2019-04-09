@@ -34,6 +34,7 @@ import * as passportConfig from "./config/passport";
 import { layout } from "./layout";
 import login from "./routes/login";
 import signup from "./routes/signup";
+import oauth2 from "./routes/oauth2";
 
 // Create Express server
 const app = express();
@@ -118,6 +119,7 @@ app.use((req: Request, res: Response) => {
 app.get("/", homeController.index);
 app.use("/login", login);
 app.use("/signup", signup);
+app.use("/oauth2", oauth2);
 app.get("/logout", userController.logout);
 app.get("/forgot", userController.getForgot);
 app.post("/forgot", userController.postForgot);

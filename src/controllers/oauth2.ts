@@ -18,7 +18,7 @@ import AccessTokenCollection from "../models/OAuth/AccessTokenCollection";
 import User from "../models/User/User";
 import { random } from "../util/random";
 import UserCollection from "../models/User/UserCollection";
-import { RequestHandlerParams } from "express-serve-static-core";
+import { RequestHandler } from "express";
 
 // Create OAuth 2.0 server
 const server: OAuth2Server = oauth2orize.createServer();
@@ -200,7 +200,7 @@ server.exchange(oauth2orize.exchange.clientCredentials(
 // authorization). We accomplish that here by routing through `ensureLoggedIn()`
 // first, and rendering the `dialog` view.
 
-export const authorization: RequestHandlerParams[] = [
+export const authorization: RequestHandler[] = [
     login.ensureLoggedIn(),
     server.authorization(
         (clientId: string, redirectUri: string, done: (err: Error | null, client?: any, redirectURI?: string) => void) => {
@@ -216,11 +216,18 @@ export const authorization: RequestHandlerParams[] = [
             }
             return done(undefined, client, redirectUri);
         },
-        (client: any, user: any, scope: string[], type: string, areq: any,
-            done: (err: Error | null, allow: boolean, info: any, locals: any) => void
-            ): void => {
-            // Auto-approve
-            done(undefined, true, undefined, undefined);
+        (client: Client, user: User, scope: string[], type: string, areq: any,
+            done: (err: Error | null, allow: boolean, info: any, locals: any) => void): void => {
+            AccessTokenCollection.findOne(
+                {clientId: client.id, userId: user.id},
+                (error: Error, accessToken: AccessToken): void => {
+                    if (error || !accessToken) {
+                        done(error, false, undefined, undefined);
+                    }
+                    // Auto-approve
+                    done(undefined, true, undefined, undefined);
+                }
+            );
         }
     )
 ];
@@ -232,7 +239,7 @@ export const authorization: RequestHandlerParams[] = [
 // exchange middleware will be invoked to handle the request. Clients must
 // authenticate when making requests to this endpoint.
 
-export const token: RequestHandlerParams[] = [
+export const token: RequestHandler[] = [
     passport.authenticate(["basic", "oauth2-client-password"], { session: false }),
     server.token(),
     server.errorHandler(),

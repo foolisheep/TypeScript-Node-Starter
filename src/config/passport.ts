@@ -3,7 +3,7 @@ import request from "request";
 import passportLocal from "passport-local";
 import passportFacebook from "passport-facebook";
 import OAuth2Strategy, { VerifyCallback } from "passport-oauth2";
-import User, { OAuthToken } from "../models/User/User";
+import User from "../models/User/User";
 import _ from "lodash";
 
 import UserCollection from "../models/User/UserCollection";
