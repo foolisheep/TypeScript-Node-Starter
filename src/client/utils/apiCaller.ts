@@ -1,5 +1,5 @@
 import fetch from "isomorphic-fetch";
-import RequestResult from "../Model/RequestResult";
+import RequestResult from "../models/RequestResult";
 
 export const API_URL = `http://localhost:${process.env.PORT}/api`; // TODO: switch between debug and product
 

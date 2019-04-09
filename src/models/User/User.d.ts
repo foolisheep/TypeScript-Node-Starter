@@ -1,11 +1,15 @@
 import mongoose from "mongoose";
+export interface OAuthToken {
+  provider: string;
+  token: string;
+}
 export default interface User extends mongoose.Document {
   email: string;
   password: string;
   passwordResetToken: string;
   passwordResetExpires: Date;
   facebook: string;
-  tokens: AuthToken[];
+  tokens: OAuthToken[];
   profile: {
     name: string;
     gender: string;
@@ -13,15 +17,11 @@ export default interface User extends mongoose.Document {
     website: string;
     picture: string;
   };
-  comparePassword: comparePasswordFunction;
+  comparePassword: ComparePasswordFunction;
   gravatar: (size: number) => string;
+  updateToken: (provider: string, token: string) => void;
 }
-export type comparePasswordFunction = (
+export type ComparePasswordFunction = (
   candidatePassword: string,
   cb: (err: mongoose.Error, isMatch: boolean) => void
 ) => void;
-export interface AuthToken {
-  accessToken: string;
-  kind: string;
-}
-

@@ -3,7 +3,7 @@ import crypto from "crypto";
 import nodemailer from "nodemailer";
 import passport from "passport";
 import UserCollection from "../models/User/UserCollection";
-import { default as User, AuthToken } from "../models/User/User";
+import User from "../models/User/User";
 import { Request, Response, NextFunction } from "express";
 import { IVerifyOptions } from "passport-local";
 import { WriteError } from "mongodb";
@@ -206,10 +206,9 @@ export let postDeleteAccount = (req: Request, res: Response, next: NextFunction)
  */
 export let getOauthUnlink = (req: Request, res: Response, next: NextFunction) => {
   const provider = req.params.provider;
-  UserCollection.findById(req.user.id, (err, user: any) => {
+  UserCollection.findById(req.user.id, (err, user: User) => {
     if (err) { return next(err); }
-    user[provider] = undefined;
-    user.tokens = user.tokens.filter((token: AuthToken) => token.kind !== provider);
+    user.tokens[provider] = undefined;
     user.save((err: WriteError) => {
       if (err) { return next(err); }
       req.flash("info", { msg: `${provider} account has been unlinked.` });
@@ -338,7 +337,7 @@ export let postForgot = (req: Request, res: Response, next: NextFunction) => {
         done(err, token);
       });
     },
-    function setRandomToken(token: AuthToken, done: Function) {
+    function setRandomToken(token: string, done: Function) {
       UserCollection.findOne({ email: req.body.email }, (err, user: any) => {
         if (err) { return done(err); }
         if (!user) {
@@ -352,7 +351,7 @@ export let postForgot = (req: Request, res: Response, next: NextFunction) => {
         });
       });
     },
-    function sendForgotPasswordEmail(token: AuthToken, user: User, done: Function) {
+    function sendForgotPasswordEmail(token: string, user: User, done: Function) {
       const transporter = nodemailer.createTransport({
         service: "SendGrid",
         auth: {
