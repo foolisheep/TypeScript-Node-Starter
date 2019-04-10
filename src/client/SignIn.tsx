@@ -3,14 +3,14 @@ import React from "react";
 interface IProps {}
 
 interface IStates {}
-export default class Login extends React.Component<IProps, IStates> {
+export default class SignIn extends React.Component<IProps, IStates> {
     render(): React.ReactElement<any> {
         return (
             <div className="container">
                 <div className="page-header">
                     <h3>Sign in</h3>
                 </div>
-                <form className="form-horizontal" method="POST"><input type="hidden" name="_csrf" />
+                <form className="form-horizontal" action="/oauth2/signin" method="POST"><input type="hidden" name="_csrf" />
                     <div className="form-group"><label className="col-sm-3 control-label" htmlFor="email">Email</label>
                         <div className="col-sm-7"><input className="form-control" type="email" name="email" id="email" placeholder="Email" autoFocus={true} required={true} /></div>
                     </div>

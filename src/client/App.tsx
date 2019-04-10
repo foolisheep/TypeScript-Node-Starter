@@ -4,7 +4,7 @@ import Footer from "./Footer";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Home from "./Home";
 import Contact from "./Contact";
-import Login from "./Login";
+import SignIn from "./SignIn";
 import SignUp from "./SignUp";
 
 interface IProps {}
@@ -18,7 +18,7 @@ export default class App extends React.Component<IProps, IStates> {
                 <Route component={Header} />
                 <Route exact path="/" component={Home} />
                 <Route path="/contact" component={Contact} />
-                <Route path="/login" component={Login} />
+                <Route path="/login" component={SignIn} />
                 <Route path="/signup" component={SignUp} />
                 <Footer />
             </div>

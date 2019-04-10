@@ -1,6 +1,4 @@
 import passport from "passport";
-import request from "request";
-import passportLocal from "passport-local";
 import passportFacebook from "passport-facebook";
 import OAuth2Strategy, { VerifyCallback } from "passport-oauth2";
 import User from "../models/User/User";
@@ -9,7 +7,6 @@ import _ from "lodash";
 import UserCollection from "../models/User/UserCollection";
 import { Request, Response, NextFunction } from "express";
 
-const LocalStrategy = passportLocal.Strategy;
 const FacebookStrategy = passportFacebook.Strategy;
 
 passport.serializeUser<any, any>((user: User, done: (err: any, id?: any) => void) => {
@@ -18,7 +15,7 @@ passport.serializeUser<any, any>((user: User, done: (err: any, id?: any) => void
 
 passport.deserializeUser((id: any, done: (err: Error, user: User) => void) => {
   UserCollection.findById(id, (err: Error, user: User) => {
-    done(err, user);
+      done(err, user);
   });
 });
 
@@ -30,65 +27,9 @@ passport.use("oauth2", new OAuth2Strategy({
     callbackURL: "http://localhost:" + process.env.PORT + "/auth/callback"
   },
   function(accessToken: string, refreshToken: string, profile: any, verified: VerifyCallback) {
-    UserCollection.findOne({ id: profile.id }, (err: Error, existingUser: User) => {
-      if (err) { return verified(err, undefined); }
-      if (existingUser) {
-        existingUser.updateToken("oauth2", accessToken);
-        existingUser.save((err: Error) => {
-          verified(err, existingUser);
-        });
-      } else {
-        const user: User = new UserCollection();
-        user.id = profile.id;
-        user.email = profile.email;
-        user.updateToken("oauth2", accessToken);
-        user.profile.name = profile.name;
-        user.profile.gender = profile.gender;
-        user.profile.picture = profile.picture;
-        user.profile.location = profile.location;
-        user.save((err: Error) => {
-          verified(err, user);
-        });
-      }
-    });
+    console.log(`accessToken: ${accessToken};\nprofile: ${profile}`);
   }
 ));
-
-/**
- * Sign in using Email and Password.
- */
-passport.use(new LocalStrategy({ usernameField: "email" }, (email, password, done): void => {
-  UserCollection.findOne({ email: email.toLowerCase() }, (err: Error, user: User): void => {
-    if (err) { return done(err); }
-    if (!user) {
-      return done(undefined, false, { message: `Email ${email} not found.` });
-    }
-    user.comparePassword(password, (err: Error, isMatch: boolean) => {
-      if (err) { return done(err); }
-      if (isMatch) {
-        return done(undefined, user);
-      }
-      return done(undefined, false, { message: "Invalid email or password." });
-    });
-  });
-}));
-
-
-/**
- * OAuth Strategy Overview
- *
- * - User is already logged in.
- *   - Check if there is an existing account with a provider id.
- *     - If there is, return an error message. (Account merging not supported)
- *     - Else link new OAuth account with currently logged-in user.
- * - User is not logged in.
- *   - Check if it's a returning user.
- *     - If returning user, sign in and we are done.
- *     - Else check if there is an existing account with user's email.
- *       - If there is, return an error message.
- *       - Else create a new account.
- */
-
 
 /**
  * Sign in with Facebook.
@@ -151,22 +92,12 @@ passport.use(new FacebookStrategy({
 }));
 
 /**
- * Login Required middleware.
- */
-export let isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  res.redirect("/login");
-};
-
-/**
  * Authorization Required middleware.
  */
 export let isAuthorized = (req: Request, res: Response, next: NextFunction) => {
   const provider = req.path.split("/").slice(-1)[0];
 
-  if (_.find(req.user.tokens, { kind: provider })) {
+  if (_.find(req.user.tokens, { provider: provider })) {
     next();
   } else {
     res.redirect(`/auth/${provider}`);

@@ -10,7 +10,7 @@ export default class SignUp extends React.Component<IProps, IStates> {
                 <div className="page-header">
                     <h3>Sign up</h3>
                 </div>
-                <form className="form-horizontal" id="signup-form" method="POST"><input type="hidden" name="_csrf" />
+                <form className="form-horizontal" action="/oauth2/signup" method="POST"><input type="hidden" name="_csrf" />
                     <div className="form-group"><label className="col-sm-3 control-label" htmlFor="email">Email</label>
                         <div className="col-sm-7"><input className="form-control" type="email" name="email" id="email" placeholder="Email" autoFocus={true} required={true} /></div>
                     </div>

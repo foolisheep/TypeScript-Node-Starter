@@ -246,6 +246,20 @@
     "@types/express" "*"
     "@types/passport" "*"
 
+"@types/passport-http-bearer@^1.0.33":
+  version "1.0.33"
+  resolved "https://registry.yarnpkg.com/@types/passport-http-bearer/-/passport-http-bearer-1.0.33.tgz#68d6df93db17a2abf58925efbfdeb3b7c2e0fdf5"
+  dependencies:
+    "@types/express" "*"
+    "@types/passport" "*"
+
+"@types/passport-http@^0.3.7":
+  version "0.3.7"
+  resolved "https://registry.yarnpkg.com/@types/passport-http/-/passport-http-0.3.7.tgz#d07b9212342c6ba1c9ca1b9c09bb7bfea77362ed"
+  dependencies:
+    "@types/express" "*"
+    "@types/passport" "*"
+
 "@types/passport-local@^1.0.32":
   version "1.0.33"
   resolved "https://registry.yarnpkg.com/@types/passport-local/-/passport-local-1.0.33.tgz#d245b60c5b801cb3aeca1ffab557d5fe1534260d"
@@ -253,6 +267,13 @@
     "@types/express" "*"
     "@types/passport" "*"
     "@types/passport-strategy" "*"
+
+"@types/passport-oauth2-client-password@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@types/passport-oauth2-client-password/-/passport-oauth2-client-password-0.1.2.tgz#77c1c1bd7d5611c8e86ad49903b2bd8500631a67"
+  dependencies:
+    "@types/express" "*"
+    "@types/passport" "*"
 
 "@types/passport-oauth2@^1.4.8":
   version "1.4.8"
@@ -3709,9 +3730,27 @@ passport-facebook@^2.1.1:
   dependencies:
     passport-oauth2 "1.x.x"
 
+passport-http-bearer@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/passport-http-bearer/-/passport-http-bearer-1.0.1.tgz#147469ea3669e2a84c6167ef99dbb77e1f0098a8"
+  dependencies:
+    passport-strategy "1.x.x"
+
+passport-http@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/passport-http/-/passport-http-0.3.0.tgz#8ee53d4380be9c60df2151925029826f77115603"
+  dependencies:
+    passport-strategy "1.x.x"
+
 passport-local@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/passport-local/-/passport-local-1.0.0.tgz#1fe63268c92e75606626437e3b906662c15ba6ee"
+  dependencies:
+    passport-strategy "1.x.x"
+
+passport-oauth2-client-password@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/passport-oauth2-client-password/-/passport-oauth2-client-password-0.1.2.tgz#4f378b678b92d16dbbd233a6c706520093e561ba"
   dependencies:
     passport-strategy "1.x.x"
 

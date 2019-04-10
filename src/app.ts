@@ -27,13 +27,11 @@ import * as homeController from "./controllers/home";
 import * as userController from "./controllers/user";
 import * as apiController from "./controllers/api";
 import * as contactController from "./controllers/contact";
-
+import * as oauth2Controller from "./controllers/oauth2";
 
 // API keys and Passport configuration
-import * as passportConfig from "./config/passport";
+import "./config/passport-consumer";
 import { layout } from "./layout";
-import login from "./routes/login";
-import signup from "./routes/signup";
 import oauth2 from "./routes/oauth2";
 
 // Create Express server
@@ -73,41 +71,29 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   res.locals.user = req.user;
   next();
 });
-app.use((req: Request, res: Response, next: NextFunction) => {
-  // After successful login, redirect back to the intended page
-  if (!req.user &&
-    req.path !== "/login" &&
-    req.path !== "/signup" &&
-    !req.path.match(/^\/auth/) &&
-    !req.path.match(/\./)) {
-    req.session.returnTo = req.path;
-  } else if (req.user &&
-    req.path == "/account") {
-    req.session.returnTo = req.path;
-  }
-  next();
-});
 app.use(
   express.static(path.join(__dirname, "public"), { maxAge: 31557600000 })
 );
-app.use((req: Request, res: Response) => {
+app.use((req: Request, res: Response, next: NextFunction) => {
   const context: any = {};
-  // TODO: why the JSX syntax cannot be compiled here?
-  const JSX = React.createElement;
-  const html: string = renderToString(
-    JSX(
-      StaticRouter,
-      {location: req.url, context: context},
-      JSX(App, undefined)
-    )
-  );
 
   if (context.url) {
     res.writeHead(301, {
       Location: context.url
     });
     res.end();
+  } else if (req.path.startsWith("/oauth2") || req.path.startsWith("/api")) {
+    next();
   } else {
+    // TODO: why the JSX syntax cannot be compiled here?
+    const JSX = React.createElement;
+    const html: string = renderToString(
+      JSX(
+        StaticRouter,
+        {location: req.url, context: context},
+        JSX(App, undefined)
+      )
+    );
     res.write(layout(html));
     res.end();
   }
@@ -117,9 +103,8 @@ app.use((req: Request, res: Response) => {
  * Primary app routes.
  */
 app.get("/", homeController.index);
-app.use("/login", login);
-app.use("/signup", signup);
-app.use("/oauth2", oauth2);
+app.post("/oauth2/signup", oauth2Controller.signUp);
+// app.use("/oauth2", oauth2);
 app.get("/logout", userController.logout);
 app.get("/forgot", userController.getForgot);
 app.post("/forgot", userController.postForgot);
@@ -127,17 +112,17 @@ app.get("/reset/:token", userController.getReset);
 app.post("/reset/:token", userController.postReset);
 app.get("/contact", contactController.getContact);
 app.post("/contact", contactController.postContact);
-app.get("/account", passportConfig.isAuthenticated, userController.getAccount);
-app.post("/account/profile", passportConfig.isAuthenticated, userController.postUpdateProfile);
-app.post("/account/password", passportConfig.isAuthenticated, userController.postUpdatePassword);
-app.post("/account/delete", passportConfig.isAuthenticated, userController.postDeleteAccount);
-app.get("/account/unlink/:provider", passportConfig.isAuthenticated, userController.getOauthUnlink);
+app.get("/account", /** bearer */userController.getAccount);
+app.post("/account/profile", /** bearer */userController.postUpdateProfile);
+app.post("/account/password", /** bearer */userController.postUpdatePassword);
+app.post("/account/delete", /** bearer */userController.postDeleteAccount);
+app.get("/account/unlink/:provider", /** bearer */userController.getOauthUnlink);
 
 /**
  * API examples routes.
  */
 app.get("/api", apiController.getApi);
-app.get("/api/facebook", passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getFacebook);
+app.get("/api/facebook", /** facebook */apiController.getFacebook);
 
 /**
  * OAuth authentication routes. (Sign in)

@@ -7,21 +7,7 @@ import User from "../models/User/User";
 import { Request, Response, NextFunction } from "express";
 import { IVerifyOptions } from "passport-local";
 import { WriteError } from "mongodb";
-import "../config/passport";
-const request = require("express-validator");
-
-/**
- * GET /login
- * Login page.
- */
-export let getLogin = (req: Request, res: Response) => {
-  if (req.user) {
-    return res.redirect("/");
-  }
-  res.render("account/login", {
-    title: "Login"
-  });
-};
+import "../config/passport-consumer";
 
 /**
  * POST /login
@@ -60,19 +46,6 @@ export let postLogin = (req: Request, res: Response, next: NextFunction) => {
 export let logout = (req: Request, res: Response) => {
   req.logout();
   res.redirect("/");
-};
-
-/**
- * GET /signup
- * Signup page.
- */
-export let getSignup = (req: Request, res: Response) => {
-  if (req.user) {
-    return res.redirect("/");
-  }
-  res.render("account/signup", {
-    title: "Create Account"
-  });
 };
 
 /**
