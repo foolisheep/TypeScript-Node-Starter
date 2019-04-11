@@ -39,10 +39,10 @@ export const authorization: RequestHandler[] = [
                 (value: Client) => clientId === value.id
             );
             if (!client) {
-                done(new Error("Error: Invalid client!"));
+                done(new Error("Invalid client!"));
             }
             if (client.redirectUri !== redirectUri) {
-                done(new Error("Error: Incorrect redirectUri!"));
+                done(new Error("Incorrect redirectUri!"));
             }
             return done(undefined, client, redirectUri);
         },

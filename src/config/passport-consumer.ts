@@ -3,6 +3,7 @@ import passportFacebook from "passport-facebook";
 import OAuth2Strategy, { VerifyCallback } from "passport-oauth2";
 import User from "../models/User/User";
 import _ from "lodash";
+import Clients from "../models/OAuth/ClientCollection";
 
 import UserCollection from "../models/User/UserCollection";
 import { Request, Response, NextFunction } from "express";
@@ -22,9 +23,9 @@ passport.deserializeUser((id: any, done: (err: Error, user: User) => void) => {
 passport.use("oauth2", new OAuth2Strategy({
     authorizationURL: "https://localhost:" + process.env.PORT + "/oauth2/authorize",
     tokenURL: "https://localhost:" + process.env.PORT + "/oauth2/token",
-    clientID: "aebb974a-3b14-4d58-8a74-72b7436deb71",
-    clientSecret: "TypeScript-is-great",
-    callbackURL: "http://localhost:" + process.env.PORT + "/auth/callback"
+    clientID: Clients[0].id,
+    clientSecret: Clients[0].secret,
+    callbackURL: Clients[0].redirectUri
   },
   function(accessToken: string, refreshToken: string, profile: any, verified: VerifyCallback) {
     console.log(`accessToken: ${accessToken};\nprofile: ${profile}`);

@@ -24,7 +24,7 @@ const server: OAuth2Server = oauth2orize.createServer();
 const issueToken = (clientId: string, userId: string, done: (err: Error | null, token?: string) => void): void => {
     const token = random.getUid(256);
     const accessToken: AccessToken = new AccessTokenCollection({
-        id: token,
+        token: token,
         clientId: clientId,
         userId: userId
     });
@@ -32,7 +32,7 @@ const issueToken = (clientId: string, userId: string, done: (err: Error | null, 
         if (error) {
             return done(error, undefined);
         }
-        return done(undefined, accessToken.id);
+        return done(undefined, accessToken.token);
     });
 };
 
@@ -75,7 +75,7 @@ server.grant(oauth2orize.grant.code(
     (client: Client, redirectUri: string, user: User, res: any, issued: (err: Error | null, code?: string) => void) => {
         const code = random.getUid(16);
         const authCode: AuthCode = new AuthCodeCollection({
-            id: code,
+            code: code,
             clientId: client.id,
             userId: user.id,
             userName: user.profile.name,
@@ -85,7 +85,7 @@ server.grant(oauth2orize.grant.code(
             if (error) {
                 return issued(error, undefined);
             }
-            return issued(undefined, authCode.id);
+            return issued(undefined, authCode.code);
         });
     })
 );
