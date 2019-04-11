@@ -87,7 +87,7 @@ export const signUp: RequestHandler = (req: Request, res: Response, next: NextFu
 
     if (errors) {
         req.flash("errors", errors);
-        return res.redirect("/oauth2/signup");
+        return res.redirect("/signup");
     }
     const user: User = new UserCollection({
         email: req.body.email,
@@ -97,7 +97,7 @@ export const signUp: RequestHandler = (req: Request, res: Response, next: NextFu
         if (err) { return next(err); }
         if (existingUser) {
             req.flash("errors", { msg: "Account with that email address already exists." });
-            return res.redirect("/oauth2/signup");
+            return res.redirect("/signup");
         }
         user.save((err: any) => {
             if (err) {
@@ -107,7 +107,7 @@ export const signUp: RequestHandler = (req: Request, res: Response, next: NextFu
                 if (err) {
                     return next(err);
                 }
-                res.redirect("/");
+                res.redirect("/auth/oauth2"); // Get access token
             });
         });
     });
@@ -125,20 +125,19 @@ export const signIn: RequestHandler = (req: Request, res: Response, next: NextFu
 
     if (errors) {
         req.flash("errors", errors);
-        return res.redirect("/oauth/login");
+        return res.redirect("/login");
     }
 
     passport.authenticate("local", (err: Error, user: User, info: IVerifyOptions) => {
         if (err) { return next(err); }
         if (!user) {
             req.flash("errors", info.message);
-            return res.redirect("/oauth/login");
+            return res.redirect("/login");
         }
         req.logIn(user, (err) => {
             if (err) { return next(err); }
             req.flash("success", { msg: "Success! You are logged in." });
-            res.redirect(req.session.returnTo || "/");
-            // TODO: After sign in succeed, user would like to get the token!
+            res.redirect("/auth/oauth2"); // Get access token
         });
     })(req, res, next);
 };

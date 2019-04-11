@@ -27,12 +27,12 @@ import * as homeController from "./controllers/home";
 import * as userController from "./controllers/user";
 import * as apiController from "./controllers/api";
 import * as contactController from "./controllers/contact";
-import * as oauth2Controller from "./controllers/oauth2";
 
 // API keys and Passport configuration
 import "./config/passport-consumer";
 import { layout } from "./layout";
 import oauth2 from "./routes/oauth2";
+import auth from "./routes/auth";
 
 // Create Express server
 const app = express();
@@ -82,7 +82,9 @@ app.use((req: Request, res: Response, next: NextFunction) => {
       Location: context.url
     });
     res.end();
-  } else if (req.path.startsWith("/oauth2") || req.path.startsWith("/api")) {
+  } else if (req.path.startsWith("/oauth2")
+          || req.path.startsWith("/auth")
+          || req.path.startsWith("/api")) {
     next();
   } else {
     // TODO: why the JSX syntax cannot be compiled here?
@@ -103,8 +105,8 @@ app.use((req: Request, res: Response, next: NextFunction) => {
  * Primary app routes.
  */
 app.get("/", homeController.index);
-app.post("/oauth2/signup", oauth2Controller.signUp);
-// app.use("/oauth2", oauth2);
+app.use("/auth", auth); // Auth client routes
+app.use("/oauth2", oauth2); // OAuth2 server routes
 app.get("/logout", userController.logout);
 app.get("/forgot", userController.getForgot);
 app.post("/forgot", userController.postForgot);
