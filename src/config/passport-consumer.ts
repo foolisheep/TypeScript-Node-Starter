@@ -21,8 +21,8 @@ passport.deserializeUser((id: any, done: (err: Error, user: User) => void) => {
 });
 
 passport.use("oauth2", new OAuth2Strategy({
-    authorizationURL: "https://localhost:" + process.env.PORT + "/oauth2/authorize",
-    tokenURL: "https://localhost:" + process.env.PORT + "/oauth2/token",
+    authorizationURL: "http://localhost:" + process.env.PORT + "/oauth2/authorize",
+    tokenURL: "http://localhost:" + process.env.PORT + "/oauth2/token",
     clientID: Clients[0].id,
     clientSecret: Clients[0].secret,
     callbackURL: Clients[0].redirectUri

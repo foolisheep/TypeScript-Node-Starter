@@ -82,9 +82,9 @@ app.use((req: Request, res: Response, next: NextFunction) => {
       Location: context.url
     });
     res.end();
-  } else if (req.path.startsWith("/oauth2")
-          || req.path.startsWith("/auth")
-          || req.path.startsWith("/api")) {
+  } else if (req.originalUrl.startsWith("/oauth2")
+          || req.originalUrl.startsWith("/auth")
+          || req.originalUrl.startsWith("/api")) {
     next();
   } else {
     // TODO: why the JSX syntax cannot be compiled here?
