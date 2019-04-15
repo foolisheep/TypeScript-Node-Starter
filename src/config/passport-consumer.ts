@@ -1,24 +1,15 @@
-import passport from "passport";
-import passportFacebook from "passport-facebook";
-import OAuth2Strategy, { VerifyCallback } from "passport-oauth2";
+// The Spec of OAuth2 defined 4 roles including user, resource server, client and authorization server.
+// This file is part of **resource server**
+import passport from "./passport-base";
+import { Strategy as FacebookStrategy } from "passport-facebook";
+import { VerifyCallback } from "passport-oauth2";
+import OAuth2Strategy from "./oauth2orize-strategy";
 import User from "../models/User/User";
 import _ from "lodash";
 import Clients from "../models/OAuth/ClientCollection";
 
 import UserCollection from "../models/User/UserCollection";
 import { Request, Response, NextFunction } from "express";
-
-const FacebookStrategy = passportFacebook.Strategy;
-
-passport.serializeUser<any, any>((user: User, done: (err: any, id?: any) => void) => {
-  done(undefined, user.id);
-});
-
-passport.deserializeUser((id: any, done: (err: Error, user: User) => void) => {
-  UserCollection.findById(id, (err: Error, user: User) => {
-      done(err, user);
-  });
-});
 
 passport.use("oauth2", new OAuth2Strategy({
     authorizationURL: "http://localhost:" + process.env.PORT + "/oauth2/authorize",
@@ -27,8 +18,9 @@ passport.use("oauth2", new OAuth2Strategy({
     clientSecret: Clients[0].secret,
     callbackURL: Clients[0].redirectUri
   },
-  function(accessToken: string, refreshToken: string, profile: any, verified: VerifyCallback) {
-    console.log(`accessToken: ${accessToken};\nprofile: ${profile}`);
+  (accessToken: string, refreshToken: string, profile: User, verified: VerifyCallback) => {
+    console.log("[OAuth2Strategy] applied, accessToken: " + accessToken + " and profile: " + JSON.stringify(profile));
+    verified(undefined, profile, { accessToken: accessToken });
   }
 ));
 

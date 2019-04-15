@@ -1,6 +1,5 @@
 // The Spec of OAuth2 defined 4 roles. They are user, resource server, client and authorization server.
-// The server side of this project implemented both resource server and authorization server roles.
-// **PLEASE NOTE** All request handlers of authorization server are located in this file.
+// All request handlers of **authorization server** are located in this file.
 
 import server from "../config/oauth2orize-server";
 import passport from "passport";
@@ -14,6 +13,7 @@ import UserCollection from "../models/User/UserCollection";
 import { RequestHandler } from "express";
 import { Request, Response, NextFunction } from "express";
 import { IVerifyOptions } from "passport-local";
+import { MiddlewareRequest } from "oauth2orize";
 
 // User authorization endpoint.
 //
@@ -51,15 +51,42 @@ export const authorization: RequestHandler[] = [
             AccessTokenCollection.findOne(
                 {clientId: client.id, userId: user.id},
                 (error: Error, accessToken: AccessToken): void => {
-                    if (error || !accessToken) {
-                        done(error, false, undefined, undefined);
+                    if (accessToken) {
+                        // Auto-approve
+                        done(undefined, true, user, undefined);
+                    } else {
+                        done(undefined, false, user, undefined);
                     }
-                    // Auto-approve
-                    done(undefined, true, undefined, undefined);
                 }
             );
         }
-    )
+    ),
+    function (req: MiddlewareRequest, res: Response) {
+      res.send(
+        "<p>Hi " + req.user.email + "</p>" +
+        "<p><b>" + req.oauth2.client.name + "</b> is requesting access to your account.</p>" +
+        "<p>Do you approve?</p>" +
+        '<form action="/oauth2/authorize/decision" method="post">' +
+        '<input name="transaction_id" type="hidden" value="' + req.oauth2.transactionID + '">' +
+        "<div>" +
+        '<input type="submit" value="Allow" id="allow">' +
+        '<input type="submit" value="Deny" name="cancel" id="deny">' +
+        "</div>" +
+        "</form>"
+      );
+    }
+];
+
+// user decision endpoint
+//
+// `decision` middleware processes a user's decision to allow or deny access
+// requested by a client application.  Based on the grant type requested by the
+// client, the above grant middleware configured above will be invoked to send
+// a response.
+
+export const decision: RequestHandler[] = [
+    login.ensureLoggedIn(),
+    server.decision()
 ];
 
 // Token endpoint.
@@ -78,7 +105,6 @@ export const token: RequestHandler[] = [
  * Create a new oauth2 user account.
  */
 export const signUp: RequestHandler = (req: Request, res: Response, next: NextFunction) => {
-    console.log("RequestHandler signUp is called");
     req.assert("email", "Email is not valid").isEmail();
     req.assert("password", "Password must be at least 4 characters long").len({ min: 4 });
     req.assert("confirmPassword", "Passwords do not match").equals(req.body.password);

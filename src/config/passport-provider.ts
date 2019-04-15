@@ -1,5 +1,8 @@
-import passport from "passport";
-import passportLocal from "passport-local";
+// The Spec of OAuth2 defined 4 roles.
+// They are user, resource server, client and authorization server.
+// This file is part of **authorization server**
+import passport from "./passport-base";
+import { Strategy as LocalStrategy } from "passport-local";
 import UserCollection from "../models/User/UserCollection";
 import User from "../models/User/User";
 import { BasicStrategy } from "passport-http";
@@ -10,12 +13,11 @@ import Client from "../models/OAuth/Client";
 import AccessTokenCollection from "../models/OAuth/AccessTokenCollection";
 import AccessToken from "../models/OAuth/AccessToken";
 
-const LocalStrategy = passportLocal.Strategy;
-
 /**
  * Sign in using Email and Password.
  */
 passport.use(new LocalStrategy({ usernameField: "email" }, (email, password, done): void => {
+    console.log("[LocalStrategy] applied, email: " + email + " and password: " + password);
     UserCollection.findOne({ email: email.toLowerCase() }, (err: Error, user: User): void => {
         if (err) {
             return done(err); }
@@ -46,6 +48,7 @@ passport.use(new LocalStrategy({ usernameField: "email" }, (email, password, don
  * the specification, in practice it is quite common.
  */
 function verifyClient(clientId: string, clientSecret: string, done: (error: Error, user?: any) => void) {
+    console.log("[ClientPasswordStrategy] applied, clientId: " + clientId + " and clientSecret: " + clientSecret);
     const client: Client = ClientCollection.find((value: Client) => value.id === clientId);
     if (!client || client.secret !== clientSecret) {
         return done(undefined, false);
@@ -67,6 +70,7 @@ passport.use(new ClientPasswordStrategy(verifyClient));
  */
 passport.use(new BearerStrategy(
     (accessToken: string, done: (error: Error, user?: any, options?: IVerifyOptions | string) => void) => {
+        console.log("[BearerStrategy] applied, accessToken: " + accessToken);
         AccessTokenCollection.findOne({id: accessToken}, (error: Error, token: AccessToken): void => {
             if (error) return done(error);
             if (!token) return done(undefined, false);

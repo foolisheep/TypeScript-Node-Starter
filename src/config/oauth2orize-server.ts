@@ -1,5 +1,7 @@
 // This module is modified from
 // https://github.com/awais786327/oauth2orize-examples/blob/master/routes/oauth2.js
+// The Spec of OAuth2 defined 4 roles, which are user, resource server, client and authorization server.
+// This file is part of **authorization server**
 
 import oauth2orize, {
     OAuth2Server,
@@ -7,6 +9,7 @@ import oauth2orize, {
     DeserializeClientDoneFunction,
     ExchangeDoneFunction
 } from "oauth2orize";
+import "./passport-provider";
 import Client from "../models/OAuth/Client";
 import ClientCollection from "../models/OAuth/ClientCollection";
 import AuthCode from "../models/OAuth/AuthCode";
@@ -22,6 +25,7 @@ const server: OAuth2Server = oauth2orize.createServer();
 
 // Function to issue and save a new access token
 const issueToken = (clientId: string, userId: string, done: (err: Error | null, token?: string) => void): void => {
+    console.log("[issue token]");
     const token = random.getUid(256);
     const accessToken: AccessToken = new AccessTokenCollection({
         token: token,
@@ -73,6 +77,7 @@ server.deserializeClient((id: string, done: DeserializeClientDoneFunction) => {
 
 server.grant(oauth2orize.grant.code(
     (client: Client, redirectUri: string, user: User, res: any, issued: (err: Error | null, code?: string) => void) => {
+        console.log("[oauth2orize.grant.code]");
         const code = random.getUid(16);
         const authCode: AuthCode = new AuthCodeCollection({
             code: code,
@@ -98,6 +103,7 @@ server.grant(oauth2orize.grant.code(
 
 server.grant(oauth2orize.grant.token(
     (client: Client, user: User, res: any, done: (err: Error | null, token?: string, params?: any) => void) => {
+        console.log("[oauth2orize.grant.token]");
         issueToken(client.id, user.id, done);
     })
 );
@@ -111,7 +117,8 @@ server.grant(oauth2orize.grant.token(
 
 server.exchange(oauth2orize.exchange.code(
     (client: Client, code: string, redirectUri: string, done: ExchangeDoneFunction) => {
-        AuthCodeCollection.findById(code, (error: Error, authCode: AuthCode) => {
+        console.log("[oauth2orize.exchange.code]");
+        AuthCodeCollection.findOne({ code: code }, (error: Error, authCode: AuthCode) => {
             if (error) {
                 return done(error);
             }
@@ -134,6 +141,7 @@ server.exchange(oauth2orize.exchange.code(
 
 server.exchange(oauth2orize.exchange.password(
     (client: Client, email: string, password: string, scope: string[], done: ExchangeDoneFunction) => {
+        console.log("[oauth2orize.exchange.password]");
         // Validate the client
         const foundClient: Client = ClientCollection.find(
             (value: Client) => client.id === value.id
@@ -169,6 +177,7 @@ server.exchange(oauth2orize.exchange.password(
 
 server.exchange(oauth2orize.exchange.clientCredentials(
     (client: Client, scope: string[], done: ExchangeDoneFunction) => {
+        console.log("[oauth2orize.exchange.clientCredentials]");
         // Validate the client
         const foundClient: Client = ClientCollection.find(
             (value: Client) => client.id === value.id

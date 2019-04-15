@@ -67,6 +67,10 @@ app.use(passport.session());
 app.use(flash());
 app.use(lusca.xframe("SAMEORIGIN"));
 app.use(lusca.xssProtection(true));
+app.use(function (req: Request, res: Response, next: NextFunction) {
+  console.log(`[${req.method} ${req.originalUrl}] is called, session is ${JSON.stringify(req.session)}`);
+  next();
+});
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.locals.user = req.user;
   next();

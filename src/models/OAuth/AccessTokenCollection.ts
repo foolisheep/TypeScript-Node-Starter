@@ -5,8 +5,6 @@ export const accessTokenSchema: Schema = new mongoose.Schema({
     token: { type: String, unique: true},
     clientId: String,
     userId: String,
-    userName: String,
-    redirectUri: String,
 });
 
 const AccessTokenCollection: Model<AccessToken> = mongoose.model("AccessToken", accessTokenSchema);
