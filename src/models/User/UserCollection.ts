@@ -7,9 +7,6 @@ export const userSchema: Schema = new mongoose.Schema({
   password: String,
   passwordResetToken: String,
   passwordResetExpires: Date,
-  facebook: String,
-  twitter: String,
-  google: String,
   tokens: Array,
   profile: {
     name: String,

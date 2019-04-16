@@ -8,7 +8,6 @@ export default interface User extends mongoose.Document {
   password: string;
   passwordResetToken: string;
   passwordResetExpires: Date;
-  facebook: string;
   tokens: OAuthToken[];
   profile: {
     name: string;

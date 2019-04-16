@@ -25,9 +25,6 @@ export default class SignIn extends React.Component<IProps, IStates> {
                             <hr/>
                         </div>
                     </div>
-                    <div className="form-group">
-                        <div className="col-sm-offset-3 col-sm-7"><a className="btn btn-block btn-facebook btn-social" href="/auth/facebook"><i className="fa fa-facebook"></i>Sign in with Facebook</a></div>
-                    </div>
                 </form>
             </div>
         );
