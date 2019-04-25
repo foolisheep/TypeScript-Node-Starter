@@ -5,22 +5,21 @@ import lusca from "lusca";
 import dotenv from "dotenv";
 import mongo from "connect-mongo";
 import flash from "express-flash";
-import path from "path";
 import mongoose from "mongoose";
 import passport from "passport";
 import expressValidator from "express-validator";
 import bluebird from "bluebird";
 import { MONGODB_URI, SESSION_SECRET } from "./util/secrets";
 import { Response, Request, NextFunction } from "express";
-import React from "react";
-import { renderToString } from "react-dom/server";
-import { StaticRouter } from "react-router";
-import App from "./client/app";
 
 const MongoStore = mongo(session);
 
 // Load environment variables from .env file, where API keys and passwords are configured
-dotenv.config({ path: ".env.example" });
+if (process.env.NODE_ENV === "production") {
+  dotenv.config({ path: ".env.production" });
+} else if (process.env.NODE_ENV === "development") {
+  dotenv.config({ path: ".env.development" });
+}
 
 // Controllers (route handlers)
 import * as homeController from "./controllers/home";
@@ -30,7 +29,6 @@ import * as contactController from "./controllers/contact";
 
 // API keys and Passport configuration
 import "./config/passport-consumer";
-import { layout } from "./layout";
 import oauth2 from "./routes/oauth2";
 import auth from "./routes/auth";
 
@@ -75,35 +73,36 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   res.locals.user = req.user;
   next();
 });
-app.use(
-  express.static(path.join(__dirname, "public"), { maxAge: 31557600000 })
-);
-app.use((req: Request, res: Response, next: NextFunction) => {
-  const context: any = {};
 
-  if (context.url) {
-    res.writeHead(301, {
-      Location: context.url
-    });
-    res.end();
-  } else if (req.originalUrl.startsWith("/oauth2")
-          || req.originalUrl.startsWith("/auth")
-          || req.originalUrl.startsWith("/api")) {
-    next();
-  } else {
-    // TODO: why the JSX syntax cannot be compiled here?
-    const JSX = React.createElement;
-    const html: string = renderToString(
-      JSX(
-        StaticRouter,
-        {location: req.url, context: context},
-        JSX(App, undefined)
-      )
-    );
-    res.write(layout(html));
-    res.end();
-  }
-});
+if (process.env.NODE_ENV === "production") {
+  app.use(
+    express.static("client/build", { maxAge: 31557600000 })
+  );
+
+  app.get("/", (req: Request, res: Response, next: NextFunction) => {
+    if (req.originalUrl.startsWith("/api")) {
+      next();
+    } else {
+      const options = {
+        root: __dirname + "/client/build/",
+        dotfiles: "deny",
+        headers: {
+            "x-timestamp": Date.now(),
+            "x-sent": true
+        }
+      };
+
+      const fileName = "index.html";
+      res.sendFile(fileName, options, function (err) {
+        if (err) {
+          next(err);
+        } else {
+          console.log("Sent:", fileName);
+        }
+      });
+    }
+  });
+}
 
 /**
  * Primary app routes.

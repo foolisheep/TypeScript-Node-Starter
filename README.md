@@ -76,7 +76,7 @@ A user account is required to connect to the database, so remember these values 
 9. Copy the connection string from the top of the page, it should look like this: `mongodb://<dbuser>:<dbpassword>@ds036069.mlab.com:36069/test-asdf`
 and replace `<dbUser>` and `<dbpassword>` with the credentials you just created. 
 Back in your project, open your `.env` file and update `MONGODB_URI` with your new connection string.
-    > NOTE! - If you don't have an `.env` file yet, rename `.env.example` to `.env` and follow the comments to update the values in that file.
+    > NOTE! - If you don't have an `.env` file yet, rename `.env.development` to `.env` and follow the comments to update the values in that file.
 10. **Success!**
 You can test that it works locally by updating `MONGODB_URI_LOCAL` to the same connection string you just updated in `MONGO_URI`.
 After rebuilding/serving, the app should work, but users that were previously created in local testing will not exist in the new database!
@@ -178,7 +178,7 @@ The full folder structure of this app is explained below:
 | **src**/server.ts        | Entry point to your express app                                                               |
 | **test**                 | Contains your tests. Seperate from source because there is a different build process.         |
 | **views**                | Views define how your app renders on the client. In this case we're using pug                 |
-| .env.example             | API keys, tokens, passwords, database URI. Clone this, but don't check it in to public repos. |
+| .env.development             | API keys, tokens, passwords, database URI. Clone this, but don't check it in to public repos. |
 | .travis.yml              | Used to configure Travis CI build                                                             |
 | .copyStaticAssets.ts     | Build script that copies images, fonts, and JS libs to the dist folder                        |
 | jest.config.js           | Used to configure Jest                                                                        |
