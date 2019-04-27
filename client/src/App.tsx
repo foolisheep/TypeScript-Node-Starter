@@ -1,26 +1,27 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import Header from "./Header";
+import Footer from "./Footer";
+import { Route } from "react-router-dom";
+import Home from "./Home";
+import Contact from "./Contact";
+import SignIn from "./SignIn";
+import SignUp from "./SignUp";
 
-const App: React.FC = () => {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+interface IProps {}
+
+interface IStates {}
+
+export default class App extends React.Component<IProps, IStates> {
+    render(): React.ReactElement<any> {
+        return (
+            <div>
+                <Route component={Header} />
+                <Route exact path="/" component={Home} />
+                <Route path="/contact" component={Contact} />
+                <Route path="/login" component={SignIn} />
+                <Route path="/signup" component={SignUp} />
+                <Footer />
+            </div>
+        );
+    }
 }
-
-export default App;
