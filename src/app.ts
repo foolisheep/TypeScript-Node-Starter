@@ -76,15 +76,17 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 if (process.env.NODE_ENV === "production") {
   app.use(
-    express.static("client/build", { maxAge: 31557600000 })
+    express.static("./client/build", { maxAge: 31557600000 })
   );
 
-  app.get("/", (req: Request, res: Response, next: NextFunction) => {
-    if (req.originalUrl.startsWith("/api")) {
+  app.use((req: Request, res: Response, next: NextFunction) => {
+    if (req.originalUrl.startsWith("/api") ||
+        req.originalUrl.startsWith("/auth") ||
+        req.originalUrl.startsWith("/oauth2")) {
       next();
     } else {
       const options = {
-        root: __dirname + "/client/build/",
+        root: "./client/build/",
         dotfiles: "deny",
         headers: {
             "x-timestamp": Date.now(),

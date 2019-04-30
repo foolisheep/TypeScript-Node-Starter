@@ -34,13 +34,12 @@
     "node-sass": "^4.7.2"
   },
   "scripts": {
-    "start": "npm run build-sass && npm run copy-static-assets && react-scripts start",
-    "build": "npm run build-sass && npm run copy-static-assets && react-scripts build",
+    "start": "react-scripts start && npm run build-sass",
+    "build": "react-scripts build && npm run build-sass",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "copy-static-assets": "node copyStaticAssets.js",
-    "build-sass": "node-sass public/css/main.scss build/static/css/main.css",
-    "watch-sass": "node-sass -w public/css/main.scss build/static/css/main.css"
+    "build-sass": "node-sass public/css/main.scss build/css/main.css",
+    "watch-sass": "node-sass -w public/css/main.scss build/css/main.css"
   },
   "eslintConfig": {
     "extends": "react-app"
