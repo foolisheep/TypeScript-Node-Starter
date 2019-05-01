@@ -74,11 +74,11 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
-if (process.env.NODE_ENV === "production") {
-  app.use(
-    express.static("./client/build", { maxAge: 31557600000 })
-  );
+app.use(
+  express.static("./client/build", { maxAge: 31557600000 })
+);
 
+if (process.env.NODE_ENV === "production") {
   app.use((req: Request, res: Response, next: NextFunction) => {
     if (req.originalUrl.startsWith("/api") ||
         req.originalUrl.startsWith("/auth") ||

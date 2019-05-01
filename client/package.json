@@ -34,7 +34,7 @@
     "node-sass": "^4.7.2"
   },
   "scripts": {
-    "start": "react-scripts start && npm run build-sass",
+    "start": "react-scripts start && npm watch build-sass",
     "build": "react-scripts build && npm run build-sass",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

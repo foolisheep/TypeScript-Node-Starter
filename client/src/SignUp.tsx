@@ -1,4 +1,5 @@
 import React from "react";
+import fetch from "isomorphic-fetch";
 
 interface IProps {}
 
@@ -39,15 +40,17 @@ export default class SignUp extends React.Component<IProps, IStates> {
 
     private _submit = (): void => {
         console.log("this._submit is called!");
+        console.log("this.emailInput is " + (this.emailInput.current && this.emailInput.current.value));
         const body: any = {
             email: this.emailInput.current && this.emailInput.current.value,
             password: this.passwordInput.current && this.passwordInput.current.value,
             confirmPassword: this.confirmPasswordInput.current && this.confirmPasswordInput.current.value,
         };
-        fetch("http://localhost:3000/oauth2/signup", {
+        fetch("/oauth2/signup", {
             method: "POST",
+            headers: { "content-type": "application/json" },
             redirect: "follow",
-            body: body
+            body: JSON.stringify(body)
         })
         .then((response: Response) => {
             // HTTP 301 response
