@@ -1,11 +1,13 @@
 import React from "react";
-import Header from "./Header";
-import Footer from "./Footer";
-import { Route } from "react-router-dom";
-import Home from "./Home";
-import Contact from "./Contact";
-import SignIn from "./SignIn";
-import SignUp from "./SignUp";
+import Header from "./pages/Header";
+import Footer from "./pages/Footer";
+import { Route, Switch } from "react-router-dom";
+import Home from "./pages/Home";
+import Contact from "./pages/Contact";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
+import NotFound from "./pages/NotFound";
+import Consent from "./pages/Consent";
 
 interface IProps {}
 
@@ -16,10 +18,14 @@ export default class App extends React.Component<IProps, IStates> {
         return (
             <div>
                 <Route component={Header} />
-                <Route exact path="/" component={Home} />
-                <Route path="/contact" component={Contact} />
-                <Route path="/login" component={SignIn} />
-                <Route path="/signup" component={SignUp} />
+                <Switch>
+                    <Route exact path="/" component={Home} />
+                    <Route path="/contact" component={Contact} />
+                    <Route path="/login" component={SignIn} />
+                    <Route path="/signup" component={SignUp} />
+                    <Route path="/consent" component={Consent} />
+                    <Route component={NotFound}  />
+                </Switch>
                 <Footer />
             </div>
         );

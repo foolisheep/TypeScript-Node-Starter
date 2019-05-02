@@ -62,18 +62,7 @@ export const authorization: RequestHandler[] = [
         }
     ),
     function (req: MiddlewareRequest, res: Response) {
-      res.send(
-        "<p>Hi " + req.user.email + "</p>" +
-        "<p><b>" + req.oauth2.client.name + "</b> is requesting access to your account.</p>" +
-        "<p>Do you approve?</p>" +
-        '<form action="/oauth2/authorize/decision" method="post">' +
-        '<input name="transaction_id" type="hidden" value="' + req.oauth2.transactionID + '">' +
-        "<div>" +
-        '<input type="submit" value="Allow" id="allow">' +
-        '<input type="submit" value="Deny" name="cancel" id="deny">' +
-        "</div>" +
-        "</form>"
-      );
+      res.redirect(`http://localhost:${process.env.PORT}/consent?email=${req.user.email}&client_name=${req.oauth2.client.name}&transactionID=${req.oauth2.transactionID}`);
     }
 ];
 
