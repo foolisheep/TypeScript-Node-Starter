@@ -46,7 +46,7 @@ mongoose.connect(mongoUrl, { useMongoClient: true }).then(
 });
 
 // Express configuration
-app.set("port", process.env.PORT);
+app.set("server_port", process.env.SERVER_PORT);
 app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -66,7 +66,7 @@ app.use(flash());
 app.use(lusca.xframe("SAMEORIGIN"));
 app.use(lusca.xssProtection(true));
 app.use(function (req: Request, res: Response, next: NextFunction) {
-  console.log(`[${req.method} ${req.originalUrl}] is called, session is ${JSON.stringify(req.session)}`);
+  console.log(`[${req.method} ${req.originalUrl}] is called, body is ${JSON.stringify(req.body)}`);
   next();
 });
 app.use((req: Request, res: Response, next: NextFunction) => {

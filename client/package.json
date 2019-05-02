@@ -2,13 +2,13 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:3001/",
   "dependencies": {
+    "http-proxy-middleware": "^0.19.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-scripts": "3.0.0",
     "react-router": "4.3.1",
     "react-router-dom": "4.3.1",
+    "react-scripts": "3.0.0",
     "typescript": "3.4.5"
   },
   "devDependencies": {
@@ -17,9 +17,10 @@
     "@types/bluebird": "^3.5.20",
     "@types/compression": "^0.0.35",
     "@types/errorhandler": "^0.0.32",
+    "@types/http-proxy-middleware": "^0.19.2",
+    "@types/isomorphic-fetch": "^0.0.35",
     "@types/jest": "^24.0.11",
     "@types/jquery": "^3.2.17",
-    "@types/isomorphic-fetch": "^0.0.35",
     "@types/lodash": "^4.14.91",
     "@types/node": "11.13.7",
     "@types/react": "16.8.3",
@@ -28,10 +29,10 @@
     "@types/react-router-dom": "4.3.1",
     "@types/shelljs": "^0.7.8",
     "concurrently": "^3.5.1",
+    "node-sass": "^4.7.2",
     "shelljs": "^0.8.1",
     "ts-jest": "^22.0.4",
-    "ts-node": "^8.1.0",
-    "node-sass": "^4.7.2"
+    "ts-node": "^8.1.0"
   },
   "scripts": {
     "start": "react-scripts start && npm watch build-sass",
