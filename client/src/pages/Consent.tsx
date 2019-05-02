@@ -22,9 +22,9 @@ export default class Consent extends React.Component<IProps, IStates> {
                     </div>
                     <form className="form-horizontal" action="/oauth2/authorize/decision" method="post">
                         <input name="transaction_id" type="hidden" value={transactionId} />
-                        <div>
+                        <div className="btn-toolbar">
                             <button className="btn btn-success" type="submit" value="Allow" id="allow">Allow</button>
-                            <button className="btn btn-cancel" type="submit" value="Deny" id="deny">Deny</button>
+                            <button className="btn btn-warning" type="submit" value="Deny" id="deny">Deny</button>
                         </div>
                     </form>
                 </div>

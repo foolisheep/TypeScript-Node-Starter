@@ -35,12 +35,10 @@
     "ts-node": "^8.1.0"
   },
   "scripts": {
-    "start": "react-scripts start && npm watch build-sass",
-    "build": "react-scripts build && npm run build-sass",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "build-sass": "node-sass public/css/main.scss build/css/main.css",
-    "watch-sass": "node-sass -w public/css/main.scss build/css/main.css"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"
