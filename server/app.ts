@@ -21,12 +21,6 @@ if (process.env.NODE_ENV === "production") {
   dotenv.config({ path: ".env.development" });
 }
 
-// Controllers (route handlers)
-import * as homeController from "./controllers/home";
-import * as userController from "./controllers/user";
-import * as apiController from "./controllers/api";
-import * as contactController from "./controllers/contact";
-
 // API keys and Passport configuration
 import "./config/passport-consumer";
 import oauth2 from "./routes/oauth2";
@@ -109,25 +103,7 @@ if (process.env.NODE_ENV === "production") {
 /**
  * Primary app routes.
  */
-app.get("/", homeController.index);
 app.use("/auth", auth); // Auth client routes
 app.use("/oauth2", oauth2); // OAuth2 server routes
-app.get("/logout", userController.logout);
-app.get("/forgot", userController.getForgot);
-app.post("/forgot", userController.postForgot);
-app.get("/reset/:token", userController.getReset);
-app.post("/reset/:token", userController.postReset);
-app.get("/contact", contactController.getContact);
-app.post("/contact", contactController.postContact);
-app.get("/account", /** bearer */userController.getAccount);
-app.post("/account/profile", /** bearer */userController.postUpdateProfile);
-app.post("/account/password", /** bearer */userController.postUpdatePassword);
-app.post("/account/delete", /** bearer */userController.postDeleteAccount);
-app.get("/account/unlink/:provider", /** bearer */userController.getOauthUnlink);
-
-/**
- * API examples routes.
- */
-app.get("/api", apiController.getApi);
 
 export default app;

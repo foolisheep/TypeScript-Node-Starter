@@ -2,7 +2,9 @@ import NetworkError from "../models/NetworkError";
 
 const API_URL = `http://localhost:3000`; // TODO: switch between debug and product
 
-const _fetch = (url: string, body: any, method: string, withToken?: boolean): Promise<any> => {
+export type Method = "GET" | "POST";
+
+const _fetch = (url: string, body: any, method: Method, withToken?: boolean): Promise<any> => {
     return fetch(`${API_URL}${url}`, {
         method: method,
         headers: {

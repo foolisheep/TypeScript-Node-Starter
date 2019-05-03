@@ -2,23 +2,23 @@
 // They are user, resource server, client and authorization server.
 // This file is part of **authorization server**
 import passport from "passport";
-import User from "../../models/User/User";
-import UserCollection from "../../models/User/UserCollection";
+import UserDocument from "../models/User/UserDocument";
+import UserCollection from "../models/User/UserCollection";
 import { Strategy as LocalStrategy } from "passport-local";
 import { BasicStrategy } from "passport-http";
 import { Strategy as ClientPasswordStrategy } from "passport-oauth2-client-password";
 import { Strategy as BearerStrategy, IVerifyOptions } from "passport-http-bearer";
-import ClientCollection from "../../models/OAuth/ClientCollection";
-import Client from "../../models/OAuth/Client";
-import AccessTokenCollection from "../../models/OAuth/AccessTokenCollection";
-import AccessToken from "../../models/OAuth/AccessToken";
+import ClientCollection from "../models/OAuth/ClientCollection";
+import Client from "../models/OAuth/Client";
+import AccessTokenCollection from "../models/OAuth/AccessTokenCollection";
+import AccessToken from "../models/OAuth/AccessToken";
 
-passport.serializeUser<any, any>((user: User, done: (err: any, id?: any) => void) => {
+passport.serializeUser<any, any>((user: UserDocument, done: (err: any, id?: any) => void) => {
     done(undefined, user.id);
 });
 
-passport.deserializeUser((id: any, done: (err: Error, user: User) => void) => {
-    UserCollection.findById(id, (err: Error, user: User) => {
+passport.deserializeUser((id: any, done: (err: Error, user: UserDocument) => void) => {
+    UserCollection.findById(id, (err: Error, user: UserDocument) => {
         done(err, user);
     });
 });
@@ -28,7 +28,7 @@ passport.deserializeUser((id: any, done: (err: Error, user: User) => void) => {
  */
 passport.use(new LocalStrategy({ usernameField: "email" }, (email, password, done): void => {
     console.log("[LocalStrategy] applied, email: " + email + " and password: " + password);
-    UserCollection.findOne({ email: email.toLowerCase() }, (err: Error, user: User): void => {
+    UserCollection.findOne({ email: email.toLowerCase() }, (err: Error, user: UserDocument): void => {
         if (err) {
             return done(err); }
         if (!user) {
@@ -85,7 +85,7 @@ passport.use(new BearerStrategy(
             if (error) return done(error);
             if (!token) return done(undefined, false);
             if (token.userId) {
-                UserCollection.findById(token.userId, (error: Error, user: User) => {
+                UserCollection.findById(token.userId, (error: Error, user: UserDocument) => {
                     if (error) return done(error);
                     if (!user) return done(undefined, false);
                     // To keep this example simple, restricted scopes are not implemented,

@@ -4,12 +4,12 @@
 import server from "../config/oauth2orize-server";
 import passport from "passport";
 import login from "connect-ensure-login";
-import Client from "../../models/OAuth/Client";
-import ClientCollection from "../../models/OAuth/ClientCollection";
-import AccessToken from "../../models/OAuth/AccessToken";
-import AccessTokenCollection from "../../models/OAuth/AccessTokenCollection";
-import User from "../../models/User/User";
-import UserCollection from "../../models/User/UserCollection";
+import Client from "../models/OAuth/Client";
+import ClientCollection from "../models/OAuth/ClientCollection";
+import AccessToken from "../models/OAuth/AccessToken";
+import AccessTokenCollection from "../models/OAuth/AccessTokenCollection";
+import UserDocument from "../models/User/UserDocument";
+import UserCollection from "../models/User/UserCollection";
 import { RequestHandler } from "express";
 import { Request, Response, NextFunction } from "express";
 import { IVerifyOptions } from "passport-local";
@@ -46,7 +46,7 @@ export const authorization: RequestHandler[] = [
             }
             return done(undefined, client, redirectUri);
         },
-        (client: Client, user: User, scope: string[], type: string, areq: any,
+        (client: Client, user: UserDocument, scope: string[], type: string, areq: any,
             done: (err: Error | null, allow: boolean, info: any, locals: any) => void): void => {
             AccessTokenCollection.findOne(
                 {clientId: client.id, userId: user.id},
@@ -104,11 +104,11 @@ export const signUp: RequestHandler = (req: Request, res: Response, next: NextFu
         req.flash("errors", errors);
         return res.redirect("/signup");
     }
-    const user: User = new UserCollection({
+    const user: UserDocument = new UserCollection({
         email: req.body.email,
         password: req.body.password
     });
-    UserCollection.findOne({ email: req.body.email }, (err: Error, existingUser: User) => {
+    UserCollection.findOne({ email: req.body.email }, (err: Error, existingUser: UserDocument) => {
         if (err) { return next(err); }
         if (existingUser) {
             req.flash("errors", { msg: "Account with that email address already exists." });
@@ -143,7 +143,7 @@ export const signIn: RequestHandler = (req: Request, res: Response, next: NextFu
         return res.redirect("/login");
     }
 
-    passport.authenticate("local", (err: Error, user: User, info: IVerifyOptions) => {
+    passport.authenticate("local", (err: Error, user: UserDocument, info: IVerifyOptions) => {
         if (err) { return next(err); }
         if (!user) {
             req.flash("errors", info.message);

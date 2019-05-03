@@ -5,16 +5,6 @@
     "version": "0.2.0",
     "configurations": [        
         {
-            "name": "Attach to Chrome, with sourcemaps",
-            "type": "chrome",
-            "request": "attach",
-            "url": "http://localhost:3000",
-            "sourceMapPathOverrides": {
-              "webpack:///*": "/*"
-            },
-            "webRoot": "${workspaceFolder}/client/build/index.html"
-        },
-        {
             "type": "node",
             "request": "attach",
             "name": "Attach by Process ID",

@@ -1,13 +1,9 @@
 import bcrypt from "bcrypt-nodejs";
-import crypto from "crypto";
 import mongoose, { Model, Schema } from "mongoose";
-import { ComparePasswordFunction, default as User, OAuthToken } from "./User";
+import { ComparePasswordFunction, default as User } from "./UserDocument";
 export const userSchema: Schema = new mongoose.Schema({
   email: { type: String, unique: true },
   password: String,
-  passwordResetToken: String,
-  passwordResetExpires: Date,
-  tokens: Array,
   profile: {
     name: String,
     gender: String,
@@ -40,31 +36,6 @@ const comparePassword: ComparePasswordFunction = function (candidatePassword, cb
 };
 
 userSchema.methods.comparePassword = comparePassword;
-
-/**
- * Helper method for getting user's gravatar.
- */
-userSchema.methods.gravatar = function (size: number) {
-  if (!size) {
-    size = 200;
-  }
-  if (!this.email) {
-    return `https://gravatar.com/avatar/?s=${size}&d=retro`;
-  }
-  const md5 = crypto.createHash("md5").update(this.email).digest("hex");
-  return `https://gravatar.com/avatar/${md5}?s=${size}&d=retro`;
-};
-
-userSchema.methods.updateToken = function (provider: string, token: string): void {
-  const tokenItem: OAuthToken = this.tokens.find(
-    (value: OAuthToken) => value.provider === provider
-  );
-  if (!tokenItem) {
-    this.tokens.push({provider: provider, token: token});
-  } else {
-    tokenItem.token = token;
-  }
-};
 
 const UserCollection: Model<User> = mongoose.model("User", userSchema);
 export default UserCollection;

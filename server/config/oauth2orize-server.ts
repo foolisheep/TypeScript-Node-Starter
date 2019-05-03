@@ -10,15 +10,15 @@ import oauth2orize, {
     ExchangeDoneFunction
 } from "oauth2orize";
 import "./passport-provider";
-import Client from "../../models/OAuth/Client";
-import ClientCollection from "../../models/OAuth/ClientCollection";
-import AuthCode from "../../models/OAuth/AuthCode";
-import AuthCodeCollection from "../../models/OAuth/AuthCodeCollection";
-import AccessToken from "../../models/OAuth/AccessToken";
-import AccessTokenCollection from "../../models/OAuth/AccessTokenCollection";
-import User from "../../models/User/User";
+import Client from "../models/OAuth/Client";
+import ClientCollection from "../models/OAuth/ClientCollection";
+import AuthCode from "../models/OAuth/AuthCode";
+import AuthCodeCollection from "../models/OAuth/AuthCodeCollection";
+import AccessToken from "../models/OAuth/AccessToken";
+import AccessTokenCollection from "../models/OAuth/AccessTokenCollection";
+import UserDocument from "../models/User/UserDocument";
 import { random } from "../util/random";
-import UserCollection from "../../models/User/UserCollection";
+import UserCollection from "../models/User/UserCollection";
 
 // Create OAuth 2.0 server
 const server: OAuth2Server = oauth2orize.createServer();
@@ -76,14 +76,14 @@ server.deserializeClient((id: string, done: DeserializeClientDoneFunction) => {
 // values, and will be exchanged for an access token.
 
 server.grant(oauth2orize.grant.code(
-    (client: Client, redirectUri: string, user: User, res: any, issued: (err: Error | null, code?: string) => void) => {
+    (client: Client, redirectUri: string, user: UserDocument, res: any, issued: (err: Error | null, code?: string) => void) => {
         console.log("[oauth2orize.grant.code]");
         const code = random.getUid(16);
         const authCode: AuthCode = new AuthCodeCollection({
             code: code,
             clientId: client.id,
             userId: user.id,
-            userName: user.profile.name,
+            userName: user.name,
             redirectUri: redirectUri
         });
         authCode.save((error: Error, authCode: AuthCode): void => {
@@ -102,7 +102,7 @@ server.grant(oauth2orize.grant.code(
 // values.
 
 server.grant(oauth2orize.grant.token(
-    (client: Client, user: User, res: any, done: (err: Error | null, token?: string, params?: any) => void) => {
+    (client: Client, user: UserDocument, res: any, done: (err: Error | null, token?: string, params?: any) => void) => {
         console.log("[oauth2orize.grant.token]");
         issueToken(client.id, user.id, done);
     })
@@ -150,7 +150,7 @@ server.exchange(oauth2orize.exchange.password(
             return done(undefined, false);
         }
         // Validate the user
-        UserCollection.findOne({ email: email.toLowerCase() }, (err: Error, user: User): void => {
+        UserCollection.findOne({ email: email.toLowerCase() }, (err: Error, user: UserDocument): void => {
             if (err) { return done(err); }
             if (!user) {
                 return done(undefined, false);
