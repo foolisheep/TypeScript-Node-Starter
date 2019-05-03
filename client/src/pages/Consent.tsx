@@ -1,5 +1,7 @@
 import React from "react";
 import NotFound from "./NotFound";
+import fetch from "../utils/fetch";
+import NetworkError from "../models/NetworkError";
 
 interface IProps {
     location: Location;
@@ -38,29 +40,14 @@ export default class Consent extends React.Component<IProps, IStates> {
     }
 
     private _allow = () => {
-        console.log("this._allow is called");
-        const url: string = "http://localhost:3000/oauth2/authorize/decision";
-        const body: any = {transaction_id: this.transactionId};
-        fetch(url, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            redirect: "follow", // manual, *follow, error
-            body: JSON.stringify(body), // body data type must match "Content-Type" header
-        }).then((response: Response) => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                return Promise.reject({
-                    status: response.status,
-                    statusText: response.statusText
-                });
-            }
-        }).then((json: any) => {
+        fetch("/oauth2/authorize/decision", { transaction_id: this.transactionId }, "POST")
+        .then((json: any) => {
             console.log("response.json is " + JSON.stringify(json));
-        }, (error: any) => {
+            localStorage.setItem("accessToken", json.accessToken);
+            // TODO: redirect or change the state
+        }, (error: NetworkError) => {
             console.log(`error is ${error.status}: ${error.statusText}`);
+            // TODO: redirect or change the state
         });
     }
 }
