@@ -8,7 +8,8 @@ import AccessTokenCollection from "../models/OAuth/AccessTokenCollection";
 import AccessToken from "../models/OAuth/AccessToken";
 import UserCollection from "../models/User/UserCollection";
 import UserDocument from "../models/User/UserDocument";
-OAuth2Strategy.prototype.userProfile = (token: string, done: (err?: Error | null, profile?: any) => void) => {
+import User from "../../models/User";
+OAuth2Strategy.prototype.userProfile = (token: string, done: (err?: Error | null, profile?: User) => void) => {
     AccessTokenCollection.findOne(
         {token: token},
         (error: Error, accessToken: AccessToken): void => {
@@ -19,6 +20,7 @@ OAuth2Strategy.prototype.userProfile = (token: string, done: (err?: Error | null
                 if (error || !user) {
                     done(error);
                 }
+                user.password = "******";
                 done(undefined, user);
             });
         }

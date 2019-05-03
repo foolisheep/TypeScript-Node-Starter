@@ -3,9 +3,9 @@
 import passport from "passport";
 import { VerifyCallback } from "passport-oauth2";
 import OAuth2Strategy from "./oauth2orize-strategy";
-import UserDocument from "../models/User/UserDocument";
 import _ from "lodash";
 import Clients from "../models/OAuth/ClientCollection";
+import User from "../../models/User";
 
 passport.use("oauth2", new OAuth2Strategy({
     authorizationURL: "http://localhost:" + process.env.PORT + "/oauth2/authorize",
@@ -14,7 +14,7 @@ passport.use("oauth2", new OAuth2Strategy({
     clientSecret: Clients[0].secret,
     callbackURL: Clients[0].redirectUri
   },
-  (accessToken: string, refreshToken: string, profile: UserDocument, verified: VerifyCallback) => {
+  (accessToken: string, refreshToken: string, profile: User, verified: VerifyCallback) => {
     console.log("[OAuth2Strategy] applied, accessToken: " + accessToken + " and profile: " + JSON.stringify(profile));
     verified(undefined, profile, { accessToken: accessToken });
   }

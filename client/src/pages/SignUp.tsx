@@ -20,6 +20,16 @@ export default class SignUp extends React.Component<IProps, IStates> {
                     <div className="form-group"><label className="col-sm-3 control-label" htmlFor="confirmPassword">Confirm Password</label>
                         <div className="col-sm-7"><input className="form-control" type="password" name="confirmPassword" placeholder="Confirm Password" required={true} /></div>
                     </div>
+                    <div className="form-group"><label className="col-sm-3 control-label" htmlFor="name">Name</label>
+                        <div className="col-sm-7"><input className="form-control" type="text" name="name" placeholder="Name" required={true} /></div>
+                    </div>
+                    <div className="form-group input-group-prepend">
+                        <label className="col-sm-3 control-label" htmlFor="gender">Gender</label>
+                        <div className="col-sm-7">
+                            <label className="radio-inline" htmlFor="male"><input name="gender" type="radio" value="male"/>Male</label>
+                            <label className="radio-inline" htmlFor="male"><input name="gender" type="radio" value="female"/>Female</label>
+                        </div>
+                    </div>
                     <div className="form-group">
                         <div className="col-sm-offset-3 col-sm-7"><button className="btn btn-success" type="submit"><i className="fa fa-user-plus"></i>Signup</button></div>
                     </div>

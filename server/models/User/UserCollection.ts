@@ -4,13 +4,11 @@ import { ComparePasswordFunction, default as User } from "./UserDocument";
 export const userSchema: Schema = new mongoose.Schema({
   email: { type: String, unique: true },
   password: String,
-  profile: {
-    name: String,
-    gender: String,
-    location: String,
-    website: String,
-    picture: String
-  }
+  name: String,
+  gender: String,
+  location: String,
+  website: String,
+  avatarUrl: String
 }, { timestamps: true });
 
 /**

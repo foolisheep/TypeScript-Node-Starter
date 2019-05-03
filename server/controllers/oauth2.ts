@@ -106,7 +106,10 @@ export const signUp: RequestHandler = (req: Request, res: Response, next: NextFu
     }
     const user: UserDocument = new UserCollection({
         email: req.body.email,
-        password: req.body.password
+        password: req.body.password,
+        gender: req.body.gender,
+        name: req.body.name,
+        location: req.body.location,
     });
     UserCollection.findOne({ email: req.body.email }, (err: Error, existingUser: UserDocument) => {
         if (err) { return next(err); }
