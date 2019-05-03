@@ -2,8 +2,8 @@ import async from "async";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
 import passport from "passport";
-import UserCollection from "../models/User/UserCollection";
-import User from "../models/User/User";
+import UserCollection from "../../models/User/UserCollection";
+import User from "../../models/User/User";
 import { Request, Response, NextFunction } from "express";
 import { IVerifyOptions } from "passport-local";
 import { WriteError } from "mongodb";
@@ -70,7 +70,7 @@ export let postSignup = (req: Request, res: Response, next: NextFunction) => {
     password: req.body.password
   });
 
-  UserCollection.findOne({ email: req.body.email }, (err, existingUser) => {
+  UserCollection.findOne({ email: req.body.email }, (err: Error, existingUser: any) => {
     if (err) { return next(err); }
     if (existingUser) {
       req.flash("errors", { msg: "Account with that email address already exists." });
@@ -113,7 +113,7 @@ export let postUpdateProfile = (req: Request, res: Response, next: NextFunction)
     return res.redirect("/account");
   }
 
-  UserCollection.findById(req.user.id, (err, user: User) => {
+  UserCollection.findById(req.user.id, (err: Error, user: User) => {
     if (err) { return next(err); }
     user.email = req.body.email || "";
     user.profile.name = req.body.name || "";
@@ -149,7 +149,7 @@ export let postUpdatePassword = (req: Request, res: Response, next: NextFunction
     return res.redirect("/account");
   }
 
-  UserCollection.findById(req.user.id, (err, user: User) => {
+  UserCollection.findById(req.user.id, (err: Error, user: User) => {
     if (err) { return next(err); }
     user.password = req.body.password;
     user.save((err: WriteError) => {
@@ -165,7 +165,7 @@ export let postUpdatePassword = (req: Request, res: Response, next: NextFunction
  * Delete user account.
  */
 export let postDeleteAccount = (req: Request, res: Response, next: NextFunction) => {
-  UserCollection.remove({ _id: req.user.id }, (err) => {
+  UserCollection.remove({ _id: req.user.id }, (err: Error) => {
     if (err) { return next(err); }
     req.logout();
     req.flash("info", { msg: "Your account has been deleted." });
@@ -179,7 +179,7 @@ export let postDeleteAccount = (req: Request, res: Response, next: NextFunction)
  */
 export let getOauthUnlink = (req: Request, res: Response, next: NextFunction) => {
   const provider = req.params.provider;
-  UserCollection.findById(req.user.id, (err, user: User) => {
+  UserCollection.findById(req.user.id, (err: Error, user: User) => {
     if (err) { return next(err); }
     user.tokens[provider] = undefined;
     user.save((err: WriteError) => {
@@ -201,7 +201,7 @@ export let getReset = (req: Request, res: Response, next: NextFunction) => {
   UserCollection
     .findOne({ passwordResetToken: req.params.token })
     .where("passwordResetExpires").gt(Date.now())
-    .exec((err, user) => {
+    .exec((err: Error, user: any) => {
       if (err) { return next(err); }
       if (!user) {
         req.flash("errors", { msg: "Password reset token is invalid or has expired." });
@@ -233,7 +233,7 @@ export let postReset = (req: Request, res: Response, next: NextFunction) => {
       UserCollection
         .findOne({ passwordResetToken: req.params.token })
         .where("passwordResetExpires").gt(Date.now())
-        .exec((err, user: any) => {
+        .exec((err: Error, user: any) => {
           if (err) { return next(err); }
           if (!user) {
             req.flash("errors", { msg: "Password reset token is invalid or has expired." });
@@ -311,7 +311,7 @@ export let postForgot = (req: Request, res: Response, next: NextFunction) => {
       });
     },
     function setRandomToken(token: string, done: Function) {
-      UserCollection.findOne({ email: req.body.email }, (err, user: any) => {
+      UserCollection.findOne({ email: req.body.email }, (err: Error, user: any) => {
         if (err) { return done(err); }
         if (!user) {
           req.flash("errors", { msg: "Account with that email address does not exist." });

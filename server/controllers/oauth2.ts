@@ -4,12 +4,12 @@
 import server from "../config/oauth2orize-server";
 import passport from "passport";
 import login from "connect-ensure-login";
-import Client from "../models/OAuth/Client";
-import ClientCollection from "../models/OAuth/ClientCollection";
-import AccessToken from "../models/OAuth/AccessToken";
-import AccessTokenCollection from "../models/OAuth/AccessTokenCollection";
-import User from "../models/User/User";
-import UserCollection from "../models/User/UserCollection";
+import Client from "../../models/OAuth/Client";
+import ClientCollection from "../../models/OAuth/ClientCollection";
+import AccessToken from "../../models/OAuth/AccessToken";
+import AccessTokenCollection from "../../models/OAuth/AccessTokenCollection";
+import User from "../../models/User/User";
+import UserCollection from "../../models/User/UserCollection";
 import { RequestHandler } from "express";
 import { Request, Response, NextFunction } from "express";
 import { IVerifyOptions } from "passport-local";

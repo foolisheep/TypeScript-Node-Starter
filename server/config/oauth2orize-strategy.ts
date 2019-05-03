@@ -4,10 +4,10 @@
 // This file is part of **authorization server**
 
 import OAuth2Strategy from "passport-oauth2";
-import AccessTokenCollection from "../models/OAuth/AccessTokenCollection";
-import AccessToken from "../models/OAuth/AccessToken";
-import UserCollection from "../models/User/UserCollection";
-import User from "../models/User/User";
+import AccessTokenCollection from "../../models/OAuth/AccessTokenCollection";
+import AccessToken from "../../models/OAuth/AccessToken";
+import UserCollection from "../../models/User/UserCollection";
+import User from "../../models/User/User";
 OAuth2Strategy.prototype.userProfile = (token: string, done: (err?: Error | null, profile?: any) => void) => {
     AccessTokenCollection.findOne(
         {token: token},

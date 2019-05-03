@@ -2,16 +2,16 @@
 // They are user, resource server, client and authorization server.
 // This file is part of **authorization server**
 import passport from "passport";
-import User from "../models/User/User";
-import UserCollection from "../models/User/UserCollection";
+import User from "../../models/User/User";
+import UserCollection from "../../models/User/UserCollection";
 import { Strategy as LocalStrategy } from "passport-local";
 import { BasicStrategy } from "passport-http";
 import { Strategy as ClientPasswordStrategy } from "passport-oauth2-client-password";
 import { Strategy as BearerStrategy, IVerifyOptions } from "passport-http-bearer";
-import ClientCollection from "../models/OAuth/ClientCollection";
-import Client from "../models/OAuth/Client";
-import AccessTokenCollection from "../models/OAuth/AccessTokenCollection";
-import AccessToken from "../models/OAuth/AccessToken";
+import ClientCollection from "../../models/OAuth/ClientCollection";
+import Client from "../../models/OAuth/Client";
+import AccessTokenCollection from "../../models/OAuth/AccessTokenCollection";
+import AccessToken from "../../models/OAuth/AccessToken";
 
 passport.serializeUser<any, any>((user: User, done: (err: any, id?: any) => void) => {
     done(undefined, user.id);

@@ -10,15 +10,15 @@ import oauth2orize, {
     ExchangeDoneFunction
 } from "oauth2orize";
 import "./passport-provider";
-import Client from "../models/OAuth/Client";
-import ClientCollection from "../models/OAuth/ClientCollection";
-import AuthCode from "../models/OAuth/AuthCode";
-import AuthCodeCollection from "../models/OAuth/AuthCodeCollection";
-import AccessToken from "../models/OAuth/AccessToken";
-import AccessTokenCollection from "../models/OAuth/AccessTokenCollection";
-import User from "../models/User/User";
+import Client from "../../models/OAuth/Client";
+import ClientCollection from "../../models/OAuth/ClientCollection";
+import AuthCode from "../../models/OAuth/AuthCode";
+import AuthCodeCollection from "../../models/OAuth/AuthCodeCollection";
+import AccessToken from "../../models/OAuth/AccessToken";
+import AccessTokenCollection from "../../models/OAuth/AccessTokenCollection";
+import User from "../../models/User/User";
 import { random } from "../util/random";
-import UserCollection from "../models/User/UserCollection";
+import UserCollection from "../../models/User/UserCollection";
 
 // Create OAuth 2.0 server
 const server: OAuth2Server = oauth2orize.createServer();

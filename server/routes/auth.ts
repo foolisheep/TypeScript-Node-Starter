@@ -2,7 +2,7 @@
 // This file lists all routes of **resource server**
 import express, { Router, Request, Response, NextFunction } from "express";
 import passport from "passport";
-import User from "../models/User/User";
+import User from "../../models/User/User";
 
 const auth: Router = express.Router();
 auth.route("/oauth2").get(passport.authenticate("oauth2"));

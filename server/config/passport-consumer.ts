@@ -3,9 +3,9 @@
 import passport from "passport";
 import { VerifyCallback } from "passport-oauth2";
 import OAuth2Strategy from "./oauth2orize-strategy";
-import User from "../models/User/User";
+import User from "../../models/User/User";
 import _ from "lodash";
-import Clients from "../models/OAuth/ClientCollection";
+import Clients from "../../models/OAuth/ClientCollection";
 
 passport.use("oauth2", new OAuth2Strategy({
     authorizationURL: "http://localhost:" + process.env.PORT + "/oauth2/authorize",
