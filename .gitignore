@@ -14,7 +14,7 @@ results
 tmp
 
 # Build
-public/css/main.css
+client/build
 
 # Coverage reports
 coverage
