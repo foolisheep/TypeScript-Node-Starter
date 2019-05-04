@@ -26,8 +26,8 @@ export default class SignUp extends React.Component<IProps, IStates> {
                     <div className="form-group input-group-prepend">
                         <label className="col-sm-3 control-label" htmlFor="gender">Gender</label>
                         <div className="col-sm-7">
-                            <label className="radio-inline" htmlFor="male"><input name="gender" type="radio" value="male"/>Male</label>
-                            <label className="radio-inline" htmlFor="male"><input name="gender" type="radio" value="female"/>Female</label>
+                            <label className="radio-inline radio" htmlFor="male"><input name="gender" type="radio" value="male"/><span>Male</span></label>
+                            <label className="radio-inline radio" htmlFor="female"><input name="gender" type="radio" value="female"/><span>Female</span></label>
                         </div>
                     </div>
                     <div className="form-group">
