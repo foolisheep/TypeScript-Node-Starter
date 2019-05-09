@@ -1,10 +1,12 @@
 import React from "react";
 import NotFound from "./NotFound";
-import fetch from "../utils/fetch";
-import NetworkError from "../models/NetworkError";
+import AppState from "../models/AppState";
+import ActionCreator from "../models/ActionCreator";
 
 interface IProps {
     location: Location;
+    state: AppState;
+    actions: ActionCreator;
 }
 
 interface IStates {}
@@ -31,7 +33,7 @@ export default class Consent extends React.Component<IProps, IStates> {
                         <input name="transaction_id" type="hidden" value={this.transactionId} />
                         <div className="btn-toolbar">
                             <button className="btn btn-success" onClick={this._allow}>Allow</button>
-                            <button className="btn btn-warning">Deny</button>
+                            <button className="btn btn-warning" onClick={this._deny}>Deny</button>
                         </div>
                     </div>
                 </div>
@@ -40,14 +42,12 @@ export default class Consent extends React.Component<IProps, IStates> {
     }
 
     private _allow = () => {
-        fetch("/oauth2/authorize/decision", { transaction_id: this.transactionId }, "POST")
-        .then((json: any) => {
-            console.log("response.json is " + JSON.stringify(json));
-            localStorage.setItem("accessToken", json.accessToken);
-            // TODO: redirect or change the state
-        }, (error: NetworkError) => {
-            console.log(`error is ${error.status}: ${error.statusText}`);
-            // TODO: redirect or change the state
-        });
+        if (this.transactionId) {
+            this.props.actions.allowConsent(this.transactionId);
+        }
+    }
+
+    private _deny = () => {
+        this.props.actions.denyConsent();
     }
 }

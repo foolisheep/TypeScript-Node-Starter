@@ -16,19 +16,23 @@ const mapStateToProps: MapStateToPropsParam<AppState, any, any> = (state: AppSta
   };
 };
 
-const mapDispatchToProps: MapDispatchToPropsParam<ActionCreator, any> = (dispatch: Dispatch): any => {
+const mapDispatchToProps: MapDispatchToPropsParam<ActionCreator, any> = (dispatch: Dispatch<any>): any => {
   return {
     actions: bindActionCreators(actions, dispatch)
   };
 };
 
-const ConnectedApp = connect(mapStateToProps, mapDispatchToProps)(App);
+const Root = (): React.ReactElement<any> => {
+  return <BrowserRouter>
+    <App />
+  </BrowserRouter>;
+};
+
+const ConnectedRoot = connect(mapStateToProps, mapDispatchToProps)(Root);
 
 ReactDOM.render(
   <Provider store={store}>
-    <BrowserRouter>
-      <ConnectedApp />
-    </BrowserRouter>
+      <ConnectedRoot />
   </Provider>,
   document.getElementById("root")
 );
