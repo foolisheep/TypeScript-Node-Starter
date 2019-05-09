@@ -2,6 +2,7 @@ import React from "react";
 import NotFound from "./NotFound";
 import AppState from "../models/AppState";
 import ActionCreator from "../models/ActionCreator";
+import connectPropsAndActions from "../utils/connect";
 
 interface IProps {
     location: Location;
@@ -10,7 +11,7 @@ interface IProps {
 }
 
 interface IStates {}
-export default class Consent extends React.Component<IProps, IStates> {
+class Consent extends React.Component<IProps, IStates> {
     params: URLSearchParams;
     transactionId: string | null;
     constructor(props: IProps) {
@@ -51,3 +52,5 @@ export default class Consent extends React.Component<IProps, IStates> {
         this.props.actions.denyConsent();
     }
 }
+
+export default connectPropsAndActions(Consent);

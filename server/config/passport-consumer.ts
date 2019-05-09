@@ -14,8 +14,8 @@ passport.use("oauth2", new OAuth2Strategy({
     clientSecret: Clients[0].secret,
     callbackURL: Clients[0].redirectUri
   },
-  (accessToken: string, refreshToken: string, profile: User, verified: VerifyCallback) => {
-    console.log("[OAuth2Strategy] applied, accessToken: " + accessToken + " and profile: " + JSON.stringify(profile));
-    verified(undefined, profile, { accessToken: accessToken });
+  (accessToken: string, refreshToken: string, user: User, verified: VerifyCallback) => {
+    console.log("[OAuth2Strategy] applied, accessToken: " + accessToken + " and user: " + JSON.stringify(user));
+    verified(undefined, user, { accessToken: accessToken });
   }
 ));

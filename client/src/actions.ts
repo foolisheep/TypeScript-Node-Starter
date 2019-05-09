@@ -13,11 +13,17 @@ export default {
     allowConsent(transactionId: string): any {
         return (dispatch: Dispatch<any>): void => {
             dispatch(this.startConsentRequest(transactionId));
-            fetch("/oauth2/authorize/decision", { transaction_id: this.transactionId }, "POST")
+            fetch("/oauth2/authorize/decision", { transaction_id: transactionId }, "POST")
             .then((json: any) => {
+                console.log(`The response is ${JSON.stringify(json)}`);
                 // TODO: Validate the result
-                localStorage.setItem(ACCESS_TOKEN_KEY, json.accessToken);
-                dispatch(this.handleConsentResponse(json.profile));
+                if (json.user && json.accessToken) {
+                    localStorage.setItem(ACCESS_TOKEN_KEY, json.accessToken);
+                    dispatch(this.handleConsentResponse(json.user));
+                } else {
+                    console.error("null accessToken or null user profile");
+                    dispatch({ type: CONSENT_REQUEST_FAILED});
+                }
             }, (error: NetworkError) => {
                 console.error(`${error.status}: ${error.statusText}`);
                 dispatch({ type: CONSENT_REQUEST_FAILED});
