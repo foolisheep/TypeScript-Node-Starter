@@ -12,7 +12,7 @@ export const CONSENT_REQUEST_FAILED: string = "CONSENT_REQUEST_FAILED";
 const actionCreator: ActionCreator = {
     allowConsent(transactionId: string): any {
         return (dispatch: Dispatch<any>): void => {
-            dispatch(actionCreator.startConsentRequest(transactionId));
+            // dispatch(actionCreator.startConsentRequest(transactionId));
             fetch("/oauth2/authorize/decision", { transaction_id: transactionId }, "POST")
             .then((json: any) => {
                 if (json.user && json.accessToken) {

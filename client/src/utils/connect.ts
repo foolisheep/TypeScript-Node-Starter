@@ -1,12 +1,11 @@
 import { MapStateToPropsParam, MapDispatchToPropsParam, connect } from "react-redux";
-import AppState from "../models/AppState";
 import { Dispatch, bindActionCreators, Action } from "redux";
 import actions from "../actions";
 import ActionCreator from "../models/ActionCreator";
 
-const mapStateToProps: MapStateToPropsParam<AppState, any, any> = (state: AppState): any => {
+const mapStateToProps: MapStateToPropsParam<any, any, any> = (state: any): any => {
     return {
-        state: state
+        state: state.default
     };
 };
 

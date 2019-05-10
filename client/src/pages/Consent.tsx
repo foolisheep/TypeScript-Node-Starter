@@ -3,6 +3,7 @@ import NotFound from "./NotFound";
 import AppState from "../models/AppState";
 import ActionCreator from "../models/ActionCreator";
 import connectPropsAndActions from "../utils/connect";
+import { Redirect } from "react-router";
 
 interface IProps {
     location: Location;
@@ -22,7 +23,7 @@ class Consent extends React.Component<IProps, IStates> {
     render(): React.ReactElement<any> {
         if (!this.transactionId) {
             return <NotFound location={this.props.location}/>;
-        } else {
+        } else if (!this.props.state.user) {
             return (
                 <div className="container">
                     <div className="page-header">
@@ -39,6 +40,8 @@ class Consent extends React.Component<IProps, IStates> {
                     </div>
                 </div>
             );
+        } else {
+            return <Redirect to="/" />;
         }
     }
 
