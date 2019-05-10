@@ -23,7 +23,7 @@ export default class App extends React.Component<IProps, IStates> {
                     <Route path="/contact" component={Contact} />
                     <Route path="/login" component={SignIn} />
                     <Route path="/signup" component={SignUp} />
-                    <Route path="/consent" component={Consent} />
+                    <Route path="/consent" render={ (props) => <Consent {...props} />} />
                     <Route component={NotFound}  />
                 </Switch>
                 <Footer />

@@ -9,17 +9,15 @@ export const CONSENT_REQUEST_START: string = "CONSENT_REQUEST_START";
 export const CONSENT_REQUEST_SUCCESS: string = "CONSENT_REQUEST_SUCCESS";
 export const CONSENT_REQUEST_FAILED: string = "CONSENT_REQUEST_FAILED";
 
-export default {
+const actionCreator: ActionCreator = {
     allowConsent(transactionId: string): any {
         return (dispatch: Dispatch<any>): void => {
-            dispatch(this.startConsentRequest(transactionId));
+            dispatch(actionCreator.startConsentRequest(transactionId));
             fetch("/oauth2/authorize/decision", { transaction_id: transactionId }, "POST")
             .then((json: any) => {
-                console.log(`The response is ${JSON.stringify(json)}`);
-                // TODO: Validate the result
                 if (json.user && json.accessToken) {
                     localStorage.setItem(ACCESS_TOKEN_KEY, json.accessToken);
-                    dispatch(this.handleConsentResponse(json.user));
+                    dispatch(actionCreator.handleConsentResponse(json.user));
                 } else {
                     console.error("null accessToken or null user profile");
                     dispatch({ type: CONSENT_REQUEST_FAILED});
@@ -46,4 +44,6 @@ export default {
             user: user
         };
     }
-} as ActionCreator;
+};
+
+export default actionCreator;
