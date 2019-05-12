@@ -7,8 +7,11 @@ import { ACCESS_TOKEN_KEY } from "./constants";
 
 export const CONSENT_REQUEST_SUCCESS: string = "CONSENT_REQUEST_SUCCESS";
 export const CONSENT_REQUEST_FAILED: string = "CONSENT_REQUEST_FAILED";
-export const AUTHORIZE_SUCCESS: string = "AUTHORIZE_SUCCESS";
-export const AUTHORIZE_FAILED: string = "AUTHORIZE_FAILED";
+export const AUTHENTICATE_SUCCESS: string = "AUTHENTICATE_SUCCESS";
+export const AUTHENTICATE_FAILED: string = "AUTHENTICATE_FAILED";
+export const LOGIN_SUCCESS: string = "LOGIN_SUCCESS";
+export const LOGIN_FAILED: string = "LOGIN_FAILED";
+export const LOGOUT: string = "LOGOUT";
 
 const actionCreator: ActionCreator = {
     allowConsent(transactionId: string): any {
@@ -17,7 +20,10 @@ const actionCreator: ActionCreator = {
             .then((json: any) => {
                 if (json.user && json.accessToken) {
                     localStorage.setItem(ACCESS_TOKEN_KEY, json.accessToken);
-                    dispatch(actionCreator.handleConsentResponse(json.user));
+                    dispatch({
+                        type: CONSENT_REQUEST_SUCCESS,
+                        user: json.user
+                    });
                 } else {
                     console.error("null accessToken or null user profile");
                     dispatch({ type: CONSENT_REQUEST_FAILED});
@@ -33,29 +39,53 @@ const actionCreator: ActionCreator = {
             type: CONSENT_REQUEST_FAILED
         };
     },
-    handleConsentResponse(user: User): Action {
-        return {
-            type: CONSENT_REQUEST_SUCCESS,
-            user: user
+    authenticate(): any {
+        return (dispatch: Dispatch<any>): void => {
+            if (!localStorage.getItem(ACCESS_TOKEN_KEY)) {
+                dispatch({ type: AUTHENTICATE_FAILED});
+            } else {
+                fetch("/oauth2/profile", undefined, "GET", true)
+                .then((json: any) => {
+                    if (json.user) {
+                        dispatch({
+                            type: AUTHENTICATE_SUCCESS,
+                            user: json.user
+                        });
+                    } else {
+                        console.error("null user profile");
+                        dispatch({ type: AUTHENTICATE_FAILED});
+                    }
+                }, (error: NetworkError) => {
+                    console.error(`${error.status}: ${error.statusText}`);
+                    dispatch({ type: AUTHENTICATE_FAILED});
+                });
+            }
         };
     },
-    authorize(): any {
+    login(email: string, password: string): any {
         return (dispatch: Dispatch<any>): void => {
-            fetch("/oauth2/profile", undefined, "GET", true)
+            fetch("/oauth2/login", { email: email, password: password }, "POST")
             .then((json: any) => {
-                if (json.user) {
+                if (json.user && json.accessToken) {
+                    localStorage.setItem(ACCESS_TOKEN_KEY, json.accessToken);
                     dispatch({
-                        type: AUTHORIZE_SUCCESS,
+                        type: LOGIN_SUCCESS,
                         user: json.user
                     });
                 } else {
                     console.error("null user profile");
-                    dispatch({ type: AUTHORIZE_FAILED});
+                    dispatch({ type: LOGIN_FAILED});
                 }
             }, (error: NetworkError) => {
                 console.error(`${error.status}: ${error.statusText}`);
-                dispatch({ type: AUTHORIZE_FAILED});
+                dispatch({ type: LOGIN_FAILED});
             });
+        };
+    },
+    logout(): Action {
+        localStorage.setItem(ACCESS_TOKEN_KEY, "");
+        return {
+            type: LOGOUT
         };
     }
 };

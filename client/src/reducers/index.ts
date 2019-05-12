@@ -1,6 +1,6 @@
 import AppState from "../models/AppState";
 import { AnyAction as Action } from "redux";
-import { AUTHORIZE_SUCCESS, CONSENT_REQUEST_FAILED, CONSENT_REQUEST_SUCCESS } from "../actions";
+import { AUTHENTICATE_SUCCESS, CONSENT_REQUEST_SUCCESS, LOGOUT, LOGIN_SUCCESS } from "../actions";
 
 // TODO
 const initialState: AppState = {
@@ -9,10 +9,12 @@ const initialState: AppState = {
 
 const reducer = (state: AppState = initialState, action: Action) => {
     switch (action.type) {
+        case LOGOUT:
+            return { ...state, user: undefined };
         case CONSENT_REQUEST_SUCCESS:
-        case AUTHORIZE_SUCCESS:
+        case AUTHENTICATE_SUCCESS:
+        case LOGIN_SUCCESS:
             return { ...state, user: action.user };
-        case CONSENT_REQUEST_FAILED:
         default:
             return state;
     }

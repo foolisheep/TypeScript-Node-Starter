@@ -30,7 +30,9 @@ interface IHeaderProps {
 interface IHeaderStates {}
 class Header extends React.Component<IHeaderProps, IHeaderStates> {
     componentDidMount(): void {
-        this.props.actions.authorize();
+        if (!this.props.state.user) {
+            this.props.actions.authenticate();
+        }
     }
 
     render(): React.ReactElement<any> {

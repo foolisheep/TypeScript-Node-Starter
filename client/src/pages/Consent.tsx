@@ -3,7 +3,7 @@ import NotFound from "./NotFound";
 import AppState from "../models/AppState";
 import ActionCreator from "../models/ActionCreator";
 import connectPropsAndActions from "../utils/connect";
-import { Redirect } from "react-router";
+import { Redirect } from "react-router-dom";
 
 interface IProps {
     location: Location;
