@@ -45,7 +45,7 @@ class Header extends React.Component<IHeaderProps, IHeaderStates> {
                     <div className="collapse navbar-collapse">
                     {
                         this.props.state.user ?
-                            <AccountControl />
+                            <AccountControl location={this.props.location}/>
                         :
                         <ul className="nav navbar-nav navbar-right">
                             <NavItem to="/login/" location={this.props.location}>Login</NavItem>

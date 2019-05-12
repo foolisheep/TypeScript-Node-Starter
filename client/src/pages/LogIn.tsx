@@ -28,13 +28,13 @@ class LogIn extends React.Component<IProps, IStates> {
                     </div>
                     <div className="form-horizontal"><input type="hidden" name="_csrf" />
                         <div className="form-group"><label className="col-sm-3 control-label" htmlFor="email">Email</label>
-                            <div className="col-sm-7"><input className="form-control" type="email" name="email" ref="this.emailRef" placeholder="Email" autoFocus={true} required={true} /></div>
+                            <div className="col-sm-7"><input className="form-control" type="email" name="email" ref={this.emailRef} placeholder="Email" autoFocus={true} required={true} /></div>
                         </div>
                         <div className="form-group"><label className="col-sm-3 control-label" htmlFor="password">Password</label>
-                            <div className="col-sm-7"><input className="form-control" type="password" name="password" ref="this.passwordRef" placeholder="Password" required={true} /></div>
+                            <div className="col-sm-7"><input className="form-control" type="password" name="password" ref={this.passwordRef} placeholder="Password" required={true} /></div>
                         </div>
                         <div className="form-group">
-                            <div className="col-sm-offset-3 col-sm-7"><button className="col-sm-3 btn btn-primary" type="submit" onClick={this._login}><i className="fa fa-user"></i>Login</button></div>
+                            <div className="col-sm-offset-3 col-sm-7"><button className="col-sm-3 btn btn-primary" onClick={ this._login }><i className="fa fa-user"></i>Login</button></div>
                         </div>
                         <div className="form-group">
                             <div className="col-sm-offset-3 col-sm-7">
@@ -49,7 +49,8 @@ class LogIn extends React.Component<IProps, IStates> {
         }
     }
 
-    private _login() {
+    private _login = (): void => {
+        console.log("this._login is called");
         const email: any = this.emailRef.current && this.emailRef.current.value;
         const password: any = this.passwordRef.current && this.passwordRef.current.value;
         if (_.isString(email) && _.isString(password)) {

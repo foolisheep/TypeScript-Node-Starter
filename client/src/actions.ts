@@ -1,5 +1,4 @@
 import ActionCreator from "./models/ActionCreator";
-import User from "../../models/User";
 import { Dispatch, AnyAction as Action } from "redux";
 import fetch from "./utils/fetch";
 import NetworkError from "./models/NetworkError";
