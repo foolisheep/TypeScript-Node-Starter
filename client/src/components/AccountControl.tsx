@@ -4,14 +4,14 @@ import ActionCreator from "../models/ActionCreator";
 import connectPropsAndActions from "../utils/connect";
 import { Link } from "react-router-dom";
 
-interface IProps {
+interface Props {
     location: Location;
     state: AppState;
     actions: ActionCreator;
 }
 
-interface IStates {}
-class AccountControl extends React.Component<IProps, IStates> {
+interface States {}
+class AccountControl extends React.Component<Props, States> {
     render(): React.ReactElement<any> {
         return <ul className="nav navbar-nav navbar-right">
             {

@@ -1,10 +1,10 @@
 import React from "react";
 import connectPropsAndActions from "../utils/connect";
 
-interface IProps {}
+interface Props {}
 
-interface IStates {}
-class Profile extends React.Component<IProps, IStates> {
+interface States {}
+class Profile extends React.Component<Props, States> {
     render(): React.ReactElement<any> {
         return (
             <div className="container">

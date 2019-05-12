@@ -2,9 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import connectPropsAndActions from "../utils/connect";
 
-interface IProps {}
-interface IStates {}
-class Home extends React.Component<IProps, IStates> {
+interface Props {}
+interface States {}
+class Home extends React.Component<Props, States> {
     render(): React.ReactElement<any> {
         return (
             <div className="container">

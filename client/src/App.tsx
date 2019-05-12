@@ -9,11 +9,11 @@ import NotFound from "./pages/NotFound";
 import Consent from "./pages/Consent";
 import Profile from "./pages/Profile";
 
-interface IProps {}
+interface Props {}
 
-interface IStates {}
+interface States {}
 
-export default class App extends React.Component<IProps, IStates> {
+export default class App extends React.Component<Props, States> {
     render(): React.ReactElement<any> {
         return (
             <div>

@@ -5,16 +5,16 @@ import { Redirect } from "react-router-dom";
 import ActionCreator from "../models/ActionCreator";
 import _ from "lodash";
 
-interface IProps {
+interface Props {
     state: AppState;
     actions: ActionCreator;
 }
 
-interface IStates {}
-class LogIn extends React.Component<IProps, IStates> {
+interface States {}
+class LogIn extends React.Component<Props, States> {
     emailRef: RefObject<HTMLInputElement>;
     passwordRef: RefObject<HTMLInputElement>;
-    constructor(props: IProps) {
+    constructor(props: Props) {
         super(props);
         this.emailRef = React.createRef();
         this.passwordRef = React.createRef();

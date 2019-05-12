@@ -5,17 +5,17 @@ import ActionCreator from "../models/ActionCreator";
 import connectPropsAndActions from "../utils/connect";
 import { Redirect } from "react-router-dom";
 
-interface IProps {
+interface Props {
     location: Location;
     state: AppState;
     actions: ActionCreator;
 }
 
-interface IStates {}
-class Consent extends React.Component<IProps, IStates> {
+interface States {}
+class Consent extends React.Component<Props, States> {
     params: URLSearchParams;
     transactionId: string | null;
-    constructor(props: IProps) {
+    constructor(props: Props) {
         super(props);
         this.params = new URLSearchParams(this.props.location.search);
         this.transactionId = this.params.get("transactionID");

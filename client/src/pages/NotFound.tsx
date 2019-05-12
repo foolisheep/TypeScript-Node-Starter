@@ -1,10 +1,10 @@
 import React from "react";
 
-interface IProps {
+interface Props {
     location: Location;
 }
-interface IStates {}
-export default class NotFound extends React.Component<IProps, IStates> {
+interface States {}
+export default class NotFound extends React.Component<Props, States> {
     render(): React.ReactElement<any> {
         return (
             <div  className="container">

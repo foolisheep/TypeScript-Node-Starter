@@ -5,13 +5,13 @@ import AppState from "../models/AppState";
 import AccountControl from "./AccountControl";
 import ActionCreator from "../models/ActionCreator";
 
-interface IProps {
+interface Props {
     to: string;
     location: Location;
 }
-interface IStates {
+interface States {
 }
-class NavItem extends React.Component<IProps, IStates> {
+class NavItem extends React.Component<Props, States> {
 
     render(): React.ReactElement<any> {
         return <li className={this.props.location.pathname === this.props.to ? "active" : undefined}>
@@ -22,13 +22,13 @@ class NavItem extends React.Component<IProps, IStates> {
     }
 }
 
-interface IHeaderProps {
+interface HeaderProps {
     location: Location;
     state: AppState;
     actions: ActionCreator;
 }
-interface IHeaderStates {}
-class Header extends React.Component<IHeaderProps, IHeaderStates> {
+interface HeaderStates {}
+class Header extends React.Component<HeaderProps, HeaderStates> {
     componentDidMount(): void {
         if (!this.props.state.user) {
             this.props.actions.authenticate();

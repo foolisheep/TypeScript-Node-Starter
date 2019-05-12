@@ -1,9 +1,9 @@
 import React from "react";
 
-interface IProps {}
+interface Props {}
 
-interface IStates {}
-export default class Footer extends React.Component<IProps, IStates> {
+interface States {}
+export default class Footer extends React.Component<Props, States> {
     render(): React.ReactElement<any> {
         const footer: string = "© 2018 Company, Inc. All Rights Reserved.";
         return (

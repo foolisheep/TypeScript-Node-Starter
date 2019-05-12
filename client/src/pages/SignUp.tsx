@@ -3,12 +3,12 @@ import connectPropsAndActions from "../utils/connect";
 import AppState from "../models/AppState";
 import { Redirect } from "react-router-dom";
 
-interface IProps {
+interface Props {
     state: AppState;
 }
 
-interface IStates {}
-class SignUp extends React.Component<IProps, IStates> {
+interface States {}
+class SignUp extends React.Component<Props, States> {
     render(): React.ReactElement<any> {
         if (!this.props.state.user) {
             return (
