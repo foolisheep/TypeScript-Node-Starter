@@ -81,7 +81,7 @@ passport.use(new ClientPasswordStrategy(verifyClient));
 passport.use(new BearerStrategy(
     (accessToken: string, done: (error: Error, user?: any, options?: IVerifyOptions | string) => void) => {
         console.log("[BearerStrategy] applied, accessToken: " + accessToken);
-        AccessTokenCollection.findOne({id: accessToken}, (error: Error, token: AccessToken): void => {
+        AccessTokenCollection.findOne({token: accessToken}, (error: Error, token: AccessToken): void => {
             if (error) return done(error);
             if (!token) return done(undefined, false);
             if (token.userId) {

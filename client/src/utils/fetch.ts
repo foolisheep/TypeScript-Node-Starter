@@ -10,14 +10,17 @@ const _fetch = (url: string, body: any, method: Method, withToken?: boolean): Pr
         "Content-Type": "application/json"
     };
     if (withToken) {
-        headers["Authorization"] = localStorage.getItem(ACCESS_TOKEN_KEY);
+        headers["Authorization"] = "Bearer " + localStorage.getItem(ACCESS_TOKEN_KEY);
     }
-    return fetch(`${API_URL}${url}`, {
+    const options: any = {
         method: method,
         headers: headers,
         redirect: "follow", // manual, *follow, error
-        body: JSON.stringify(body),
-    }).then((response: Response) => {
+    };
+    if (method === "POST") {
+        options["body"] = JSON.stringify(body);
+    }
+    return fetch(`${API_URL}${url}`, options).then((response: Response) => {
         if (response.ok) {
             return response.json();
         } else {

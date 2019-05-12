@@ -41,7 +41,7 @@ const actionCreator: ActionCreator = {
     },
     authorize(): any {
         return (dispatch: Dispatch<any>): void => {
-            fetch("/oauth2/profile", {}, "GET")
+            fetch("/oauth2/profile", undefined, "GET", true)
             .then((json: any) => {
                 if (json.user) {
                     dispatch({

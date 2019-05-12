@@ -169,14 +169,5 @@ export const logIn: RequestHandler = (req: Request, res: Response, next: NextFun
 };
 
 export const profile: RequestHandler = (req: Request, res: Response, next: NextFunction) => {
-    AccessTokenCollection.findOne({token: req.get("Authorization")}, (error: Error, accessToken: AccessToken) => {
-        req.flash("error", error);
-        if (!accessToken || !accessToken.userId) {
-            return res.status(404).json("");
-        }
-        UserCollection.findById(accessToken.userId, (err: Error, user: UserDocument) => {
-            if (err) { return next(err); }
-            return res.json({user: user});
-        });
-    });
+    return res.json({user: req.user});
 };

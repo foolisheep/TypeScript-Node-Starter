@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import connectPropsAndActions from "../utils/connect";
 import AppState from "../models/AppState";
 import AccountControl from "./AccountControl";
+import ActionCreator from "../models/ActionCreator";
 
 interface IProps {
     to: string;
@@ -24,9 +25,13 @@ class NavItem extends React.Component<IProps, IStates> {
 interface IHeaderProps {
     location: Location;
     state: AppState;
+    actions: ActionCreator;
 }
 interface IHeaderStates {}
 class Header extends React.Component<IHeaderProps, IHeaderStates> {
+    componentDidMount(): void {
+        this.props.actions.authorize();
+    }
 
     render(): React.ReactElement<any> {
         return (

@@ -8,18 +8,12 @@ import SignUp from "./pages/SignUp";
 import NotFound from "./pages/NotFound";
 import Consent from "./pages/Consent";
 import Profile from "./pages/Profile";
-import ActionCreator from "./models/ActionCreator";
 
-interface IProps {
-    actions: ActionCreator;
-}
+interface IProps {}
 
 interface IStates {}
 
 export default class App extends React.Component<IProps, IStates> {
-    componentDidMount(): void {
-        this.props.actions.authorize();
-    }
     render(): React.ReactElement<any> {
         return (
             <div>
