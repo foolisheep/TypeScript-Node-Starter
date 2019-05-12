@@ -30,5 +30,6 @@ const getUid = (length: number): string => {
 };
 
 export const random: any = {
+    getRandomInt,
     getUid
 };

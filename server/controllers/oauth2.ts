@@ -14,6 +14,7 @@ import { RequestHandler } from "express";
 import { Request, Response, NextFunction } from "express";
 import { IVerifyOptions } from "passport-local";
 import { MiddlewareRequest } from "oauth2orize";
+import { random } from "../util/random";
 
 // User authorization endpoint.
 //
@@ -97,12 +98,18 @@ export const signUp: RequestHandler = (req: Request, res: Response, next: NextFu
     req.assert("email", "Email is not valid").isEmail();
     req.assert("password", "Password must be at least 4 characters long").len({ min: 4 });
     req.assert("confirmPassword", "Passwords do not match").equals(req.body.password);
+    req.assert("gender", "Gender is incorrect").isIn(["male", "female"]);
     req.sanitize("email").normalizeEmail({ gmail_remove_dots: false });
     const errors = req.validationErrors();
+    // TODO: Validate more fields, and respond the error correctly
 
     if (errors) {
         req.flash("errors", errors);
         return res.redirect("/signup");
+    }
+    let avatarUrl: string = req.body.avatarUrl;
+    if (!avatarUrl) {
+        avatarUrl = `/images/avatars/${req.body.gender}_${random.getRandomInt(1, 8).toString()}.png`;
     }
     const user: UserDocument = new UserCollection({
         email: req.body.email,
@@ -110,6 +117,7 @@ export const signUp: RequestHandler = (req: Request, res: Response, next: NextFu
         gender: req.body.gender,
         name: req.body.name,
         location: req.body.location,
+        avatarUrl: avatarUrl
     });
     UserCollection.findOne({ email: req.body.email }, (err: Error, existingUser: UserDocument) => {
         if (err) { return next(err); }
@@ -134,7 +142,7 @@ export const signUp: RequestHandler = (req: Request, res: Response, next: NextFu
 /**
  * Sign in using email and password.
  */
-export const signIn: RequestHandler = (req: Request, res: Response, next: NextFunction) => {
+export const logIn: RequestHandler = (req: Request, res: Response, next: NextFunction) => {
     req.assert("email", "Email is not valid").isEmail();
     req.assert("password", "Password cannot be blank").notEmpty();
     req.sanitize("email").normalizeEmail({ gmail_remove_dots: false });

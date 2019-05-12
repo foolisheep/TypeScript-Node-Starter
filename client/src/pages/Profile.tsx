@@ -1,14 +1,15 @@
 import React from "react";
+import connectPropsAndActions from "../utils/connect";
 
 interface IProps {}
 
 interface IStates {}
-export default class Contact extends React.Component<IProps, IStates> {
+class Profile extends React.Component<IProps, IStates> {
     render(): React.ReactElement<any> {
         return (
             <div className="container">
                 <div className="page-header">
-                    <h3>Contact Form</h3>
+                    <h3>Edit Profile</h3>
                 </div>
                 <form className="form-horizontal" method="POST"><input type="hidden" name="_csrf" />
                     <div className="form-group"><label className="col-sm-2 control-label" htmlFor="name">Name</label>
@@ -28,3 +29,5 @@ export default class Contact extends React.Component<IProps, IStates> {
         );
     }
 }
+
+export default connectPropsAndActions(Profile);

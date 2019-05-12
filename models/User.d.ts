@@ -4,7 +4,7 @@ export default interface User {
     password?: string;
     name: string;
     gender: Gender;
+    avatarUrl: string;
     location?: string;
     website?: string;
-    avatarUrl?: string;
 }

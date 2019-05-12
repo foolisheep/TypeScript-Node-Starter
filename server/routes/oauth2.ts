@@ -8,6 +8,6 @@ oauth2.route("/token").post(controllers.token);
 oauth2.route("/authorize").get(controllers.authorization);
 oauth2.route("/authorize/decision").post(controllers.decision);
 oauth2.route("/signup").post(controllers.signUp);
-oauth2.route("/signin").post(controllers.signIn);
+oauth2.route("/login").post(controllers.logIn);
 
 export default oauth2;

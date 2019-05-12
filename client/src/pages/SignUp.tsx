@@ -1,9 +1,10 @@
 import React from "react";
+import connectPropsAndActions from "../utils/connect";
 
 interface IProps {}
 
 interface IStates {}
-export default class SignUp extends React.Component<IProps, IStates> {
+class SignUp extends React.Component<IProps, IStates> {
     render(): React.ReactElement<any> {
         return (
             <div className="container">
@@ -38,3 +39,5 @@ export default class SignUp extends React.Component<IProps, IStates> {
         );
     }
 }
+
+export default connectPropsAndActions(SignUp);

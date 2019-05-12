@@ -1,9 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import connectPropsAndActions from "../utils/connect";
 
 interface IProps {}
 interface IStates {}
-export default class Home extends React.Component<IProps, IStates> {
+class Home extends React.Component<IProps, IStates> {
     render(): React.ReactElement<any> {
         return (
             <div className="container">
@@ -36,3 +37,5 @@ export default class Home extends React.Component<IProps, IStates> {
         );
     }
 }
+
+export default connectPropsAndActions(Home);
