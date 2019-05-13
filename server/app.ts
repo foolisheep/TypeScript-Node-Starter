@@ -4,7 +4,6 @@ import session from "express-session";
 import lusca from "lusca";
 import dotenv from "dotenv";
 import mongo from "connect-mongo";
-import flash from "express-flash";
 import mongoose from "mongoose";
 import passport from "passport";
 import expressValidator from "express-validator";
@@ -56,7 +55,6 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(flash());
 app.use(lusca.xframe("SAMEORIGIN"));
 app.use(lusca.xssProtection(true));
 app.use(function (req: Request, res: Response, next: NextFunction) {

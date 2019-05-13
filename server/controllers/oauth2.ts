@@ -15,6 +15,7 @@ import { Request, Response, NextFunction } from "express";
 import { IVerifyOptions } from "passport-local";
 import { MiddlewareRequest } from "oauth2orize";
 import { random } from "../util/random";
+import { MappedError, Dictionary } from "express-validator/shared-typings";
 
 // User authorization endpoint.
 //
@@ -100,12 +101,11 @@ export const signUp: RequestHandler = (req: Request, res: Response, next: NextFu
     req.assert("confirmPassword", "Passwords do not match").equals(req.body.password);
     req.assert("gender", "Gender is incorrect").isIn(["male", "female"]);
     req.sanitize("email").normalizeEmail({ gmail_remove_dots: false });
-    const errors = req.validationErrors();
+    const errors: any = req.validationErrors();
     // TODO: Validate more fields, and respond the error correctly
 
     if (errors) {
-        req.flash("errors", errors);
-        return res.redirect("/signup");
+        return res.status(400).json(errors);
     }
     let avatarUrl: string = req.body.avatarUrl;
     if (!avatarUrl) {
@@ -122,8 +122,7 @@ export const signUp: RequestHandler = (req: Request, res: Response, next: NextFu
     UserCollection.findOne({ email: req.body.email }, (err: Error, existingUser: UserDocument) => {
         if (err) { return next(err); }
         if (existingUser) {
-            req.flash("errors", { msg: "Account with that email address already exists." });
-            return res.redirect("/signup");
+            return res.status(409).json({ msg: "Account with that email address already exists." });
         }
         user.save((err: any) => {
             if (err) {
@@ -150,19 +149,16 @@ export const logIn: RequestHandler = (req: Request, res: Response, next: NextFun
     const errors = req.validationErrors();
 
     if (errors) {
-        req.flash("errors", errors);
-        return res.redirect("/login");
+        return res.status(400).json(errors);
     }
 
     passport.authenticate("local", (err: Error, user: UserDocument, info: IVerifyOptions) => {
         if (err) { return next(err); }
         if (!user) {
-            req.flash("errors", info.message);
-            return res.redirect("/login");
+            return res.status(401).json({ msg: "Unknown user." });
         }
         req.logIn(user, (err) => {
             if (err) { return next(err); }
-            req.flash("success", { msg: "Success! You are logged in." });
             res.redirect("/auth/oauth2"); // Get access token
         });
     })(req, res, next);

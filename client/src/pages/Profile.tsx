@@ -9,7 +9,7 @@ class Profile extends React.Component<Props, States> {
         return (
             <div className="container">
                 <div className="page-header">
-                    <h3>Edit Profile</h3>
+                    <h3>Edit Profile (Not ready yet)</h3>
                 </div>
                 <form className="form-horizontal" method="POST"><input type="hidden" name="_csrf" />
                     <div className="form-group"><label className="col-sm-2 control-label" htmlFor="name">Name</label>

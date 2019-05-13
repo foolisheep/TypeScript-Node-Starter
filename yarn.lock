@@ -1524,10 +1524,6 @@ connect-ensure-login@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/connect-ensure-login/-/connect-ensure-login-0.1.1.tgz#174dcc51243b9eac23f8d98215aeb6694e2e8a12"
 
-connect-flash@0.1.x:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/connect-flash/-/connect-flash-0.1.1.tgz#d8630f26d95a7f851f9956b1e8cc6732f3b6aa30"
-
 connect-mongo@^2.0.0:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/connect-mongo/-/connect-mongo-2.0.3.tgz#db6cabe1e3add5acc9ef9c486681027675a58ee5"
@@ -1985,12 +1981,6 @@ expect@^24.7.1:
     jest-matcher-utils "^24.7.0"
     jest-message-util "^24.7.1"
     jest-regex-util "^24.3.0"
-
-express-flash@0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/express-flash/-/express-flash-0.0.2.tgz#23d1a8bcf3f90d707928e489f96869ecad0acda2"
-  dependencies:
-    connect-flash "0.1.x"
 
 express-session@^1.15.6:
   version "1.16.1"
