@@ -64,7 +64,7 @@ export const authorization: RequestHandler[] = [
         }
     ),
     function (req: MiddlewareRequest, res: Response) {
-      res.redirect(`http://localhost:${process.env.PORT}/consent?email=${req.user.email}&client_name=${req.oauth2.client.name}&transactionID=${req.oauth2.transactionID}`);
+      res.redirect(302, `http://localhost:${process.env.PORT}/consent?email=${req.user.email}&client_name=${req.oauth2.client.name}&transactionID=${req.oauth2.transactionID}`);
     }
 ];
 
@@ -101,12 +101,13 @@ export const signUp: RequestHandler = (req: Request, res: Response, next: NextFu
     req.assert("confirmPassword", "Passwords do not match").equals(req.body.password);
     req.assert("gender", "Gender is incorrect").isIn(["male", "female"]);
     req.sanitize("email").normalizeEmail({ gmail_remove_dots: false });
-    const errors: any = req.validationErrors();
     // TODO: Validate more fields, and respond the error correctly
-
-    if (errors) {
-        return res.status(400).json(errors);
+    // We only pick an error for user each time
+    const errors: MappedError[] = req.validationErrors() as MappedError[];
+    if (errors && errors.length > 0) {
+        return res.status(400).json(errors[0]);
     }
+
     let avatarUrl: string = req.body.avatarUrl;
     if (!avatarUrl) {
         avatarUrl = `/images/avatars/${req.body.gender}_${random.getRandomInt(1, 8).toString()}.png`;
@@ -132,7 +133,7 @@ export const signUp: RequestHandler = (req: Request, res: Response, next: NextFu
                 if (err) {
                     return next(err);
                 }
-                res.redirect("/auth/oauth2"); // Get access token
+                res.redirect(302, "/auth/oauth2"); // Get access token
             });
         });
     });
@@ -159,7 +160,7 @@ export const logIn: RequestHandler = (req: Request, res: Response, next: NextFun
         }
         req.logIn(user, (err) => {
             if (err) { return next(err); }
-            res.redirect("/auth/oauth2"); // Get access token
+            res.redirect(302, "/auth/oauth2"); // Get access token
         });
     })(req, res, next);
 };
