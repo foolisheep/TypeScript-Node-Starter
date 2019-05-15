@@ -1,5 +1,5 @@
 import { ActionCreatorsMapObject, AnyAction as Action } from "redux";
-import HttpError from "./HttpError";
+import FetchError from "./FetchError";
 
 export default interface ActionCreator extends ActionCreatorsMapObject {
     allowConsent(transactionId: string): any;
@@ -7,5 +7,5 @@ export default interface ActionCreator extends ActionCreatorsMapObject {
     authenticate(): any;
     login(email: string, password: string): any;
     logout(): Action;
-    handleHttpError(type: string, error: HttpError): Action;
+    handleHttpError(type: string, error: FetchError): Action;
 }

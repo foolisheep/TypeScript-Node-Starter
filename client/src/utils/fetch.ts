@@ -1,11 +1,9 @@
-import NetworkError from "../models/HttpError";
-import { ACCESS_TOKEN_KEY } from "../constants";
-
-const API_URL = `http://localhost:3000`; // TODO: switch between debug and product
+import FetchError from "../models/FetchError";
+import { ACCESS_TOKEN_KEY, RESPONSE_CONTENT_TYPE } from "../constants";
 
 export type Method = "GET" | "POST";
 
-const _fetch = (url: string, body: any, method: Method, withToken?: boolean, followRedirect?: boolean): Promise<any> => {
+const _fetch = (url: string, body: any, method: Method, withToken?: boolean): Promise<any> => {
     const headers: any = {
         "Content-Type": "application/json"
     };
@@ -19,22 +17,33 @@ const _fetch = (url: string, body: any, method: Method, withToken?: boolean, fol
     if (method === "POST") {
         options.body = JSON.stringify(body);
     }
-    if (followRedirect) {
-        options.redirect = "follow";
-    }
-    return fetch(`${API_URL}${url}`, options).then((response: Response) => {
-        if (!followRedirect && response.redirected) {
-            // Manually handle redirect
-            window.location.href = response.url;
-            return { redirected: true };
-        } else if (response.ok) {
-            return response.json();
+    return fetch(`${window.location.origin}${url}`, options)
+    .then((response: Response) => {
+        if (response.ok) {
+            let contentType: string | null = response.headers.get("Content-Type") || response.headers.get("content-type");
+            if (contentType === null) {
+                return response.text();
+            }
+            contentType = contentType.toLowerCase();
+            if (contentType.startsWith(RESPONSE_CONTENT_TYPE.TEXT)) {
+                return response.text();
+            } else if (contentType.startsWith(RESPONSE_CONTENT_TYPE.JSON)) {
+                return response.json();
+            } else if (contentType.startsWith(RESPONSE_CONTENT_TYPE.HTML)) {
+                // Drop the html payload and redirect to the url from client
+                window.location.href = response.url;
+                return Promise.resolve({ redirected: true, to: response.url });
+            } else {
+                return response.text();
+            }
         } else {
-            return Promise.reject({
-                status: response.status,
-                statusText: response.statusText,
-                message: response.json(),
-            } as NetworkError);
+            return response.json().then((body: any) => {
+                return Promise.reject({
+                    status: response.status,
+                    statusText: response.statusText,
+                    msg: body && body.msg
+                } as FetchError);
+            });
         }
     });
 };
