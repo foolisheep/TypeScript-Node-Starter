@@ -8,7 +8,6 @@ import SignUp from "./pages/SignUp";
 import NotFound from "./pages/NotFound";
 import Consent from "./pages/Consent";
 import Profile from "./pages/Profile";
-
 interface Props {}
 
 interface States {}

@@ -96,10 +96,11 @@ export const token: RequestHandler[] = [
  * Create a new oauth2 user account.
  */
 export const signUp: RequestHandler = (req: Request, res: Response, next: NextFunction) => {
-    req.assert("email", "Email is not valid").isEmail();
-    req.assert("password", "Password must be at least 4 characters long").len({ min: 4 });
-    req.assert("confirmPassword", "Passwords do not match").equals(req.body.password);
-    req.assert("gender", "Gender is incorrect").isIn(["male", "female"]);
+    req.assert("email", "Email is not valid.").isEmail();
+    req.assert("password", "Password must be at least 4 characters long.").len({ min: 4 });
+    req.assert("confirmPassword", "Passwords do not match.").equals(req.body.password);
+    req.assert("name", "Name cannot be blank.").notEmpty();
+    req.assert("gender", "Gender is incorrect.").isIn(["male", "female"]);
     req.sanitize("email").normalizeEmail({ gmail_remove_dots: false });
     // TODO: Validate more fields, and respond the error correctly
     // We only pick an error for user each time
@@ -143,23 +144,27 @@ export const signUp: RequestHandler = (req: Request, res: Response, next: NextFu
  * Sign in using email and password.
  */
 export const logIn: RequestHandler = (req: Request, res: Response, next: NextFunction) => {
-    req.assert("email", "Email is not valid").isEmail();
-    req.assert("password", "Password cannot be blank").notEmpty();
+    req.assert("email", "Email is not valid.").isEmail();
+    req.assert("password", "Password cannot be blank.").notEmpty();
     req.sanitize("email").normalizeEmail({ gmail_remove_dots: false });
 
-    const errors = req.validationErrors();
-
-    if (errors) {
-        return res.status(400).json(errors);
+    // We only pick an error for user each time
+    const errors: MappedError[] = req.validationErrors() as MappedError[];
+    if (errors && errors.length > 0) {
+        return res.status(400).json(errors[0]);
     }
 
     passport.authenticate("local", (err: Error, user: UserDocument, info: IVerifyOptions) => {
-        if (err) { return next(err); }
+        if (err) {
+            return res.status(401).json({ msg: err.message });
+        }
         if (!user) {
-            return res.status(401).json({ msg: "Unknown user." });
+            return res.status(401).json({ msg: "Login failed." });
         }
         req.logIn(user, (err) => {
-            if (err) { return next(err); }
+            if (err) {
+                return res.status(401).json({ msg: "Login failed." });
+            }
             res.redirect(302, "/auth/oauth2"); // Get access token
         });
     })(req, res, next);

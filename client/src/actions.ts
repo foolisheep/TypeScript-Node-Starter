@@ -3,6 +3,7 @@ import { Dispatch, AnyAction as Action } from "redux";
 import fetch from "./utils/fetch";
 import FetchError from "./models/FetchError";
 import { ACCESS_TOKEN_KEY } from "./constants";
+import { toast } from "react-toastify";
 
 export const CONSENT_REQUEST_SUCCESS: string = "CONSENT_REQUEST_SUCCESS";
 export const CONSENT_REQUEST_FAILED: string = "CONSENT_REQUEST_FAILED";
@@ -15,7 +16,9 @@ export const LOGOUT: string = "LOGOUT";
 
 const actionCreator: ActionCreator = {
     handleHttpError(type: string, error: FetchError): Action {
-        console.error(`[${error.status}]: ${error.statusText}\n${JSON.stringify(error.msg)}`);
+        const formattedMessage: string = `[${error.status}]: ${error.statusText}\n${JSON.stringify(error.msg)}`;
+        console.error(formattedMessage);
+        toast.error(error.msg);
         return {
             type: type
         };
@@ -35,7 +38,7 @@ const actionCreator: ActionCreator = {
                     dispatch({ type: CONSENT_REQUEST_FAILED});
                 }
             }, (error: FetchError) => {
-                dispatch(this.handleHttpError(CONSENT_REQUEST_FAILED, error));
+                dispatch(actionCreator.handleHttpError(CONSENT_REQUEST_FAILED, error));
             });
         };
     },
@@ -61,7 +64,7 @@ const actionCreator: ActionCreator = {
                         dispatch({ type: AUTHENTICATE_FAILED});
                     }
                 }, (error: FetchError) => {
-                    dispatch(this.handleHttpError(AUTHENTICATE_FAILED, error));
+                    dispatch(actionCreator.handleHttpError(AUTHENTICATE_FAILED, error));
                 });
             }
         };
@@ -81,7 +84,7 @@ const actionCreator: ActionCreator = {
                     dispatch({ type: LOGIN_FAILED});
                 }
             }, (error: FetchError) => {
-                dispatch(this.handleHttpError(LOGIN_FAILED, error));
+                dispatch(actionCreator.handleHttpError(LOGIN_FAILED, error));
             });
         };
     },
