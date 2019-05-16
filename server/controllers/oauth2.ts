@@ -15,7 +15,7 @@ import { Request, Response, NextFunction } from "express";
 import { IVerifyOptions } from "passport-local";
 import { MiddlewareRequest } from "oauth2orize";
 import { random } from "../util/random";
-import { MappedError, Dictionary } from "express-validator/shared-typings";
+import { MappedError } from "express-validator/shared-typings";
 
 // User authorization endpoint.
 //
@@ -106,7 +106,7 @@ export const signUp: RequestHandler = (req: Request, res: Response, next: NextFu
     // We only pick an error for user each time
     const errors: MappedError[] = req.validationErrors() as MappedError[];
     if (errors && errors.length > 0) {
-        return res.status(400).json(errors[0]);
+        return res.status(400).json({ message: errors[0].msg });
     }
 
     let avatarUrl: string = req.body.avatarUrl;
@@ -118,13 +118,13 @@ export const signUp: RequestHandler = (req: Request, res: Response, next: NextFu
         password: req.body.password,
         gender: req.body.gender,
         name: req.body.name,
-        location: req.body.location,
+        address: req.body.address,
         avatarUrl: avatarUrl
     });
     UserCollection.findOne({ email: req.body.email }, (err: Error, existingUser: UserDocument) => {
         if (err) { return next(err); }
         if (existingUser) {
-            return res.status(409).json({ msg: "Account with that email address already exists." });
+            return res.status(409).json({ message: "Account with that email address already exists." });
         }
         user.save((err: any) => {
             if (err) {
@@ -151,19 +151,19 @@ export const logIn: RequestHandler = (req: Request, res: Response, next: NextFun
     // We only pick an error for user each time
     const errors: MappedError[] = req.validationErrors() as MappedError[];
     if (errors && errors.length > 0) {
-        return res.status(400).json(errors[0]);
+        return res.status(400).json({ message: errors[0].msg });
     }
 
     passport.authenticate("local", (err: Error, user: UserDocument, info: IVerifyOptions) => {
         if (err) {
-            return res.status(401).json({ msg: err.message });
+            return res.status(401).json({ message: err.message });
         }
         if (!user) {
-            return res.status(401).json({ msg: "Login failed." });
+            return res.status(401).json({ message: "Login failed." });
         }
         req.logIn(user, (err) => {
             if (err) {
-                return res.status(401).json({ msg: "Login failed." });
+                return res.status(401).json({ message: "Login failed." });
             }
             res.redirect(302, "/auth/oauth2"); // Get access token
         });

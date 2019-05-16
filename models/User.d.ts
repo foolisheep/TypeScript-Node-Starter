@@ -5,6 +5,6 @@ export default interface User {
     name: string;
     gender: Gender;
     avatarUrl: string;
-    location?: string;
+    address?: string;
     website?: string;
 }

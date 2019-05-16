@@ -15,9 +15,9 @@ const MongoStore = mongo(session);
 
 // Load environment variables from .env file, where API keys and passwords are configured
 if (process.env.NODE_ENV === "production") {
-  dotenv.config({ path: ".env.production" });
+    dotenv.config({ path: ".env.production" });
 } else if (process.env.NODE_ENV === "development") {
-  dotenv.config({ path: ".env.development" });
+    dotenv.config({ path: ".env.development" });
 }
 
 // API keys and Passport configuration
@@ -32,10 +32,10 @@ const app = express();
 const mongoUrl = MONGODB_URI;
 (<any>mongoose).Promise = bluebird;
 mongoose.connect(mongoUrl, { useMongoClient: true }).then(
-  () => { /** ready to use. The `mongoose.connect()` promise resolves to undefined. */ },
+    () => { /** ready to use. The `mongoose.connect()` promise resolves to undefined. */ },
 ).catch(err => {
-  console.log("MongoDB connection error. Please make sure MongoDB is running. " + err);
-  // process.exit();
+    console.log("MongoDB connection error. Please make sure MongoDB is running. " + err);
+    // process.exit();
 });
 
 // Express configuration
@@ -45,57 +45,57 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(expressValidator());
 app.use(session({
-  resave: true,
-  saveUninitialized: true,
-  secret: SESSION_SECRET,
-  store: new MongoStore({
-    url: mongoUrl,
-    autoReconnect: true
-  })
+    resave: true,
+    saveUninitialized: true,
+    secret: SESSION_SECRET,
+    store: new MongoStore({
+        url: mongoUrl,
+        autoReconnect: true
+    })
 }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(lusca.xframe("SAMEORIGIN"));
 app.use(lusca.xssProtection(true));
 app.use(function (req: Request, res: Response, next: NextFunction) {
-  console.log(`[${req.method} ${req.originalUrl}] is called, body is ${JSON.stringify(req.body)}`);
-  next();
+    console.log(`[${req.method} ${req.originalUrl}] is called, body is ${JSON.stringify(req.body)}`);
+    next();
 });
 app.use((req: Request, res: Response, next: NextFunction) => {
-  res.locals.user = req.user;
-  next();
+    res.locals.user = req.user;
+    next();
 });
 
 app.use(
-  express.static("./client/build", { maxAge: 31557600000 })
+    express.static("./client/build", { maxAge: 31557600000 })
 );
 
 if (process.env.NODE_ENV === "production") {
-  app.use((req: Request, res: Response, next: NextFunction) => {
-    if (req.originalUrl.startsWith("/api") ||
-        req.originalUrl.startsWith("/auth") ||
-        req.originalUrl.startsWith("/oauth2")) {
-      next();
-    } else {
-      const options = {
-        root: "./client/build/",
-        dotfiles: "deny",
-        headers: {
-            "x-timestamp": Date.now(),
-            "x-sent": true
-        }
-      };
-
-      const fileName = "index.html";
-      res.sendFile(fileName, options, function (err) {
-        if (err) {
-          next(err);
+    app.use((req: Request, res: Response, next: NextFunction) => {
+        if (req.originalUrl.startsWith("/api") ||
+            req.originalUrl.startsWith("/auth") ||
+            req.originalUrl.startsWith("/oauth2")) {
+            next();
         } else {
-          console.log("Sent:", fileName);
+            const options = {
+                root: "./client/build/",
+                dotfiles: "deny",
+                headers: {
+                    "x-timestamp": Date.now(),
+                    "x-sent": true
+                }
+            };
+
+            const fileName = "index.html";
+            res.sendFile(fileName, options, function (err) {
+                if (err) {
+                    next(err);
+                } else {
+                    console.log("Sent:", fileName);
+                }
+            });
         }
-      });
-    }
-  });
+    });
 }
 
 /**

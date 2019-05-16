@@ -41,7 +41,7 @@ passport.use(new LocalStrategy({ usernameField: "email" }, (email, password, don
             if (isMatch) {
                 return done(undefined, user);
             }
-            return done({ message: "Email or password does not match." }, false);
+            return done({ message: "Password is incorrect." }, false);
         });
     });
 }));

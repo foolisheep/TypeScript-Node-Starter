@@ -18,7 +18,7 @@ class AccountControl extends React.Component<Props, States> {
                 this.props.state.user ?
                 <li className="dropdown">
                     <a className="dropdown-toggle" href="_blank" data-toggle="dropdown">
-                        <img className="img-thumbnail" src={this.props.state.user.avatarUrl} alt={this.props.state.user.name}/>
+                        <img className="img-thumbnail profile" src={this.props.state.user.avatarUrl} alt={this.props.state.user.name}/>
                             <span>{this.props.state.user.name}</span>
                         <i className="caret"></i>
                     </a>

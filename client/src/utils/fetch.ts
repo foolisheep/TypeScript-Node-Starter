@@ -1,4 +1,3 @@
-import FetchError from "../models/FetchError";
 import { ACCESS_TOKEN_KEY, RESPONSE_CONTENT_TYPE } from "../constants";
 
 export type Method = "GET" | "POST";
@@ -39,10 +38,9 @@ const _fetch = (url: string, body: any, method: Method, withToken?: boolean): Pr
         } else {
             return response.json().then((body: any) => {
                 return Promise.reject({
-                    status: response.status,
-                    statusText: response.statusText,
-                    msg: body && body.msg
-                } as FetchError);
+                    name: `${response.status} ${response.statusText}`,
+                    message: body && body.message
+                } as Error);
             });
         }
     });

@@ -34,7 +34,7 @@ class LogIn extends React.Component<Props, States> {
                             <div className="col-sm-7"><input className="form-control" type="password" name="password" ref={this.passwordRef} placeholder="Password" required={true} /></div>
                         </div>
                         <div className="form-group">
-                            <div className="col-sm-offset-3 col-sm-7"><button className="col-sm-3 btn btn-primary" onClick={ this._login }><i className="fa fa-user"></i>Login</button></div>
+                            <div className="col-sm-offset-3 col-sm-7"><button className="col-sm-3 btn btn-primary" onClick={ this._login }><i className="fa fa-user"></i>Log In</button></div>
                         </div>
                         <div className="form-group">
                             <div className="col-sm-offset-3 col-sm-7">

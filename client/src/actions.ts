@@ -1,7 +1,6 @@
 import ActionCreator from "./models/ActionCreator";
 import { Dispatch, AnyAction as Action } from "redux";
 import fetch from "./utils/fetch";
-import FetchError from "./models/FetchError";
 import { ACCESS_TOKEN_KEY } from "./constants";
 import { toast } from "react-toastify";
 
@@ -15,10 +14,10 @@ export const SIGN_UP_FAILED: string = "SIGN_UP_FAILED";
 export const LOGOUT: string = "LOGOUT";
 
 const actionCreator: ActionCreator = {
-    handleHttpError(type: string, error: FetchError): Action {
-        const formattedMessage: string = `[${error.status}]: ${error.statusText}\n${JSON.stringify(error.msg)}`;
+    handleFetchError(type: string, error: Error): Action {
+        const formattedMessage: string = `${error.name}\n${JSON.stringify(error.message)}`;
         console.error(formattedMessage);
-        toast.error(error.msg);
+        toast.error(error.message);
         return {
             type: type
         };
@@ -37,8 +36,8 @@ const actionCreator: ActionCreator = {
                     console.error("null accessToken or null user profile");
                     dispatch({ type: CONSENT_REQUEST_FAILED});
                 }
-            }, (error: FetchError) => {
-                dispatch(actionCreator.handleHttpError(CONSENT_REQUEST_FAILED, error));
+            }, (error: Error) => {
+                dispatch(actionCreator.handleFetchError(CONSENT_REQUEST_FAILED, error));
             });
         };
     },
@@ -63,8 +62,8 @@ const actionCreator: ActionCreator = {
                         console.error("null user profile");
                         dispatch({ type: AUTHENTICATE_FAILED});
                     }
-                }, (error: FetchError) => {
-                    dispatch(actionCreator.handleHttpError(AUTHENTICATE_FAILED, error));
+                }, (error: Error) => {
+                    dispatch(actionCreator.handleFetchError(AUTHENTICATE_FAILED, error));
                 });
             }
         };
@@ -83,8 +82,8 @@ const actionCreator: ActionCreator = {
                     console.error("null user profile");
                     dispatch({ type: LOGIN_FAILED});
                 }
-            }, (error: FetchError) => {
-                dispatch(actionCreator.handleHttpError(LOGIN_FAILED, error));
+            }, (error: Error) => {
+                dispatch(actionCreator.handleFetchError(LOGIN_FAILED, error));
             });
         };
     },

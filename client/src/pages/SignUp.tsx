@@ -3,7 +3,6 @@ import connectPropsAndActions from "../utils/connect";
 import AppState from "../models/AppState";
 import { Redirect } from "react-router-dom";
 import fetch from "../utils/fetch";
-import FetchError from "../models/FetchError";
 import ActionCreator from "../models/ActionCreator";
 import { SIGN_UP_FAILED } from "../actions";
 
@@ -55,7 +54,7 @@ class SignUp extends React.Component<Props, States> {
                             </div>
                         </div>
                         <div className="form-group">
-                            <div className="col-sm-offset-3 col-sm-7"><button className="btn btn-success" onClick={ this._signUp }><i className="fa fa-user-plus"></i>Signup</button></div>
+                            <div className="col-sm-offset-3 col-sm-7"><button className="btn btn-primary" onClick={ this._signUp }><i className="fa fa-user-plus"></i>Sign Up</button></div>
                         </div>
                     </div>
                 </div>
@@ -74,8 +73,8 @@ class SignUp extends React.Component<Props, States> {
         fetch("/oauth2/signup", { email, password, confirmPassword, name, gender }, "POST")
         .then((json: any) => {
             console.log(JSON.stringify(json));
-        }, (error: FetchError) => {
-            this.props.actions.handleHttpError(SIGN_UP_FAILED, error);
+        }, (error: Error) => {
+            this.props.actions.handleFetchError(SIGN_UP_FAILED, error);
         });
     }
 }

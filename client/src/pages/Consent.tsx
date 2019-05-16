@@ -1,5 +1,5 @@
 import React from "react";
-import NotFound from "./NotFound";
+import ErrorPage from "./ErrorPage";
 import AppState from "../models/AppState";
 import ActionCreator from "../models/ActionCreator";
 import connectPropsAndActions from "../utils/connect";
@@ -22,7 +22,8 @@ class Consent extends React.Component<Props, States> {
     }
     render(): React.ReactElement<any> {
         if (!this.transactionId) {
-            return <NotFound location={this.props.location}/>;
+            const error: Error = { name: "No Transaction ID", message: "" };
+            return <ErrorPage error={error} />;
         } else if (!this.props.state.user) {
             return (
                 <div className="container">
@@ -34,7 +35,7 @@ class Consent extends React.Component<Props, States> {
                     <div className="form-horizontal">
                         <input name="transaction_id" type="hidden" value={this.transactionId} />
                         <div className="btn-toolbar">
-                            <button className="btn btn-success" onClick={this._allow}>Allow</button>
+                            <button className="btn btn-primary" onClick={this._allow}>Allow</button>
                             <button className="btn btn-warning" onClick={this._deny}>Deny</button>
                         </div>
                     </div>
