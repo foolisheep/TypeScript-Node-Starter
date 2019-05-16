@@ -7,4 +7,5 @@ export default interface ActionCreator extends ActionCreatorsMapObject {
     login(email: string, password: string): any;
     logout(): Action;
     handleFetchError(type: string, error: Error): Action;
+    updateProfile(user: User): any;
 }

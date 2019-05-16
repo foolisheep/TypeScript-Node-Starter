@@ -1,14 +1,28 @@
-import React from "react";
+import React, { RefObject } from "react";
 import connectPropsAndActions from "../utils/connect";
 import AppState from "../models/AppState";
 import ErrorPage from "./ErrorPage";
+import ActionCreator from "../models/ActionCreator";
 
 interface Props {
     state: AppState;
+    actions: ActionCreator;
 }
 
 interface States {}
+
 class Profile extends React.Component<Props, States> {
+    addressRef: RefObject<HTMLInputElement>;
+    websiteRef: RefObject<HTMLInputElement>;
+    nameRef: RefObject<HTMLInputElement>;
+    maleRef: RefObject<HTMLInputElement>;
+    constructor(props: Props) {
+        super(props);
+        this.addressRef = React.createRef();
+        this.websiteRef = React.createRef();
+        this.nameRef = React.createRef();
+        this.maleRef = React.createRef();
+    }
     render(): React.ReactElement<any> {
         if (this.props.state.user) {
             return (
@@ -17,29 +31,51 @@ class Profile extends React.Component<Props, States> {
                         <h3>Edit Profile</h3>
                     </div>
                     <div className="form-horizontal"><input type="hidden" name="_csrf" />
-                        <div className="form-group"><label className="col-sm-3 control-label" htmlFor="email">Email</label>
-                            <div className="col-sm-7"><input className="form-control" type="email" name="email" id="email" value={this.props.state.user.email} /></div>
+                        <div className="form-group">
+                            <label className="col-sm-3 control-label" htmlFor="email">Email</label>
+                            <div className="col-sm-7">
+                                <input className="form-control" type="email" name="email" disabled={true} defaultValue={this.props.state.user.email} />
+                            </div>
                         </div>
-                        <div className="form-group"><label className="col-sm-3 control-label" htmlFor="name">Name</label>
-                            <div className="col-sm-7"><input className="form-control" type="text" name="name" id="name" value={this.props.state.user.name} /></div>
+                        <div className="form-group">
+                            <label className="col-sm-3 control-label" htmlFor="name">Name</label>
+                            <div className="col-sm-7">
+                                <input className="form-control" type="text" name="name" ref={this.nameRef} defaultValue={this.props.state.user.name} />
+                            </div>
+                        </div>
+                        <div className="form-group">
+                            <label className="col-sm-3 control-label">Photo</label>
+                            <div className="col-sm-4">
+                                <img className="profile" src={this.props.state.user.avatarUrl} width="100" height="100" alt={this.props.state.user.name} />
+                            </div>
                         </div>
                         <div className="form-group"><label className="col-sm-3 control-label">Gender</label>
                             <div className="col-sm-6">
-                                <label className="radio radio-inline"><input type="radio" checked={this.props.state.user.gender === "male"} name="gender" value="male" data-toggle="radio"/><span>Male</span></label>
-                                <label className="radio radio-inline"><input type="radio" checked={this.props.state.user.gender === "female"} name="gender" value="female" data-toggle="radio"/><span>Female</span></label>
+                                <label className="radio radio-inline">
+                                    <input type="radio" ref={this.maleRef} defaultChecked={this.props.state.user.gender === "male"} name="gender" value="male" data-toggle="radio"/>
+                                    <span>Male</span>
+                                </label>
+                                <label className="radio radio-inline">
+                                    <input type="radio" defaultChecked={this.props.state.user.gender === "female"} name="gender" value="female" data-toggle="radio"/>
+                                    <span>Female</span>
+                                </label>
                             </div>
                         </div>
-                        <div className="form-group"><label className="col-sm-3 control-label" htmlFor="address">Address</label>
-                            <div className="col-sm-7"><input className="form-control" type="text" name="address" id="address" value={this.props.state.user.address} /></div>
-                        </div>
-                        <div className="form-group"><label className="col-sm-3 control-label" htmlFor="website">Website</label>
-                            <div className="col-sm-7"><input className="form-control" type="text" name="website" id="website" value={this.props.state.user.website} /></div>
-                        </div>
-                        <div className="form-group"><label className="col-sm-3 control-label">Photo</label>
-                            <div className="col-sm-4"><img className="profile" src={this.props.state.user.avatarUrl} width="100" height="100" alt={this.props.state.user.name} /></div>
+                        <div className="form-group">
+                            <label className="col-sm-3 control-label" htmlFor="address">Address</label>
+                            <div className="col-sm-7"><input className="form-control" type="text" name="address" ref={this.addressRef}  defaultValue={this.props.state.user.address} /></div>
                         </div>
                         <div className="form-group">
-                            <div className="col-sm-offset-3 col-sm-4"><button className="btn btn btn-primary" type="submit"><i className="fa fa-pencil"></i>Update</button></div>
+                            <label className="col-sm-3 control-label" htmlFor="website">Website</label>
+                            <div className="col-sm-7"><input className="form-control" type="text" name="website" ref={this.websiteRef}  defaultValue={this.props.state.user.website} /></div>
+                        </div>
+                        <div className="form-group">
+                            <div className="col-sm-offset-3 col-sm-4">
+                                <button className="btn btn btn-primary" type="submit" onClick={this._update}>
+                                    <i className="fa fa-pencil"></i>
+                                    Update
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -50,6 +86,19 @@ class Profile extends React.Component<Props, States> {
                 message: "Please log in first."
             };
             return <ErrorPage error={error} />;
+        }
+    }
+
+    private _update = (): void => {
+        if (this.props.state.user) {
+            console.log("this._update is called");
+            const email: any = this.props.state.user.email;
+            const address: any = this.addressRef.current && this.addressRef.current.value;
+            const website: any = this.websiteRef.current && this.websiteRef.current.value;
+            const name: any = this.nameRef.current && this.nameRef.current.value;
+            const gender: string = this.maleRef.current && this.maleRef.current.checked ? "male" : "female";
+            const avatarUrl: string = this.props.state.user.avatarUrl;
+            this.props.actions.updateProfile({email, name, gender, website, address, avatarUrl});
         }
     }
 }

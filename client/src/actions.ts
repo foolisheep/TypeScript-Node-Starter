@@ -3,6 +3,7 @@ import { Dispatch, AnyAction as Action } from "redux";
 import fetch from "./utils/fetch";
 import { ACCESS_TOKEN_KEY } from "./constants";
 import { toast } from "react-toastify";
+import User from "../../models/User";
 
 export const CONSENT_REQUEST_SUCCESS: string = "CONSENT_REQUEST_SUCCESS";
 export const CONSENT_REQUEST_FAILED: string = "CONSENT_REQUEST_FAILED";
@@ -10,6 +11,8 @@ export const AUTHENTICATE_SUCCESS: string = "AUTHENTICATE_SUCCESS";
 export const AUTHENTICATE_FAILED: string = "AUTHENTICATE_FAILED";
 export const LOGIN_SUCCESS: string = "LOGIN_SUCCESS";
 export const LOGIN_FAILED: string = "LOGIN_FAILED";
+export const UPDATE_PROFILE_SUCCESS: string = "UPDATE_PROFILE_SUCCESS";
+export const UPDATE_PROFILE_FAILED: string = "UPDATE_PROFILE_FAILED";
 export const SIGN_UP_FAILED: string = "SIGN_UP_FAILED";
 export const LOGOUT: string = "LOGOUT";
 
@@ -91,6 +94,28 @@ const actionCreator: ActionCreator = {
         localStorage.setItem(ACCESS_TOKEN_KEY, "");
         return {
             type: LOGOUT
+        };
+    },
+    updateProfile(user: User): any {
+        return (dispatch: Dispatch<any>): void => {
+            if (!localStorage.getItem(ACCESS_TOKEN_KEY)) {
+                dispatch({ type: UPDATE_PROFILE_FAILED});
+            } else {
+                fetch("/oauth2/profile", user, "POST", true)
+                .then((json: any) => {
+                    if (json.user) {
+                        dispatch({
+                            type: UPDATE_PROFILE_SUCCESS,
+                            user: json.user
+                        });
+                    } else {
+                        console.error("null user profile");
+                        dispatch({ type: UPDATE_PROFILE_FAILED});
+                    }
+                }, (error: Error) => {
+                    dispatch(actionCreator.handleFetchError(UPDATE_PROFILE_FAILED, error));
+                });
+            }
         };
     }
 };

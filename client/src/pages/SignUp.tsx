@@ -17,14 +17,14 @@ class SignUp extends React.Component<Props, States> {
     passwordRef: RefObject<HTMLInputElement>;
     confirmPasswordRef: RefObject<HTMLInputElement>;
     nameRef: RefObject<HTMLInputElement>;
-    genderRef: RefObject<HTMLInputElement>;
+    maleRef: RefObject<HTMLInputElement>;
     constructor(props: Props) {
         super(props);
         this.emailRef = React.createRef();
         this.passwordRef = React.createRef();
         this.confirmPasswordRef = React.createRef();
         this.nameRef = React.createRef();
-        this.genderRef = React.createRef();
+        this.maleRef = React.createRef();
     }
     render(): React.ReactElement<any> {
         if (!this.props.state.user) {
@@ -49,7 +49,7 @@ class SignUp extends React.Component<Props, States> {
                         <div className="form-group input-group-prepend">
                             <label className="col-sm-3 control-label" htmlFor="gender">Gender</label>
                             <div className="col-sm-7">
-                                <label className="radio-inline radio" htmlFor="male"><input name="gender" type="radio" value="male" ref={this.genderRef}/><span>Male</span></label>
+                                <label className="radio-inline radio" htmlFor="male"><input name="gender" type="radio" value="male" defaultChecked={true} ref={this.maleRef}/><span>Male</span></label>
                                 <label className="radio-inline radio" htmlFor="female"><input name="gender" type="radio" value="female"/><span>Female</span></label>
                             </div>
                         </div>
@@ -69,7 +69,7 @@ class SignUp extends React.Component<Props, States> {
         const password: any = this.passwordRef.current && this.passwordRef.current.value;
         const confirmPassword: any = this.confirmPasswordRef.current && this.confirmPasswordRef.current.value;
         const name: any = this.nameRef.current && this.nameRef.current.value;
-        const gender: string = this.genderRef.current && this.genderRef.current.checked ? "male" : "female";
+        const gender: string = this.maleRef.current && this.maleRef.current.checked ? "male" : "female";
         fetch("/oauth2/signup", { email, password, confirmPassword, name, gender }, "POST")
         .then((json: any) => {
             console.log(JSON.stringify(json));

@@ -173,3 +173,8 @@ export const logIn: RequestHandler = (req: Request, res: Response, next: NextFun
 export const profile: RequestHandler = (req: Request, res: Response, next: NextFunction) => {
     return res.json({user: req.user});
 };
+
+export const updateProfile: RequestHandler = (req: Request, res: Response, next: NextFunction) => {
+    return res.json({user: req.user});
+    // TODO: implement the real logic
+};
