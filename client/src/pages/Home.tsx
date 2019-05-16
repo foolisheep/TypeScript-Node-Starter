@@ -8,8 +8,8 @@ class Home extends React.Component<Props, States> {
     render(): React.ReactElement<any> {
         return (
             <div className="container">
-                <h1>Hackathon Starter</h1>
-                <p className="lead">A boilerplate for Node.js web applications.</p>
+                <h1>TypeScript MERN Starter</h1>
+                <p className="lead">A boilerplate for RESTful MERN web applications with TypeScript.</p>
                 <hr/>
                 <div className="row">
                     <div className="col-sm-6">

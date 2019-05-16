@@ -1,12 +1,12 @@
 {
-  "name": "express-typescript-starter",
+  "name": "typescript-mern-starter",
   "version": "0.1.0",
-  "description": "A starting point for Node.js express apps with TypeScript",
+  "description": "A starting point for RESTful MERN apps with TypeScript",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Microsoft/TypeScript-Node-Starter"
+    "url": "https://github.com/shanhuiyang/TypeScript-MERN-Starter"
   },
-  "author": "Bowden Kelly",
+  "author": "SHAN Huiyang",
   "license": "MIT",
   "scripts": {
     "update": "yarn && cd client && yarn && cd ..",
