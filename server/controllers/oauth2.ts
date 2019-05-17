@@ -175,6 +175,22 @@ export const profile: RequestHandler = (req: Request, res: Response, next: NextF
 };
 
 export const updateProfile: RequestHandler = (req: Request, res: Response, next: NextFunction) => {
-    return res.json({user: req.user});
+    req.assert("email", "Malicious attack is detected.").equals(req.user.email);
+    req.assert("name", "Name cannot be blank.").notEmpty();
+    req.assert("avatarUrl", "Invalid url.").isURL();
+    req.assert("gender", "Gender is incorrect.").isIn(["male", "female"]);
+    UserCollection.findOne({ email: req.body.email }, (err: Error, user: UserDocument) => {
+        if (err) { return next(err); }
+        if (!user) {
+            return res.status(404).json({ message: "Account with that email cannot be found." });
+        }
+        Object.assign(user, req.body);
+        user.save((err: any) => {
+            if (err) {
+                return next(err);
+            }
+            res.json(user);
+        });
+    });
     // TODO: implement the real logic
 };

@@ -77,6 +77,7 @@ const actionCreator: ActionCreator = {
             .then((json: any) => {
                 if (json.user && json.accessToken) {
                     localStorage.setItem(ACCESS_TOKEN_KEY, json.accessToken);
+                    toast.success("Log in successfully.");
                     dispatch({
                         type: LOGIN_SUCCESS,
                         user: json.user
@@ -104,6 +105,7 @@ const actionCreator: ActionCreator = {
                 fetch("/oauth2/profile", user, "POST", true)
                 .then((json: any) => {
                     if (json.user) {
+                        toast.success("Update profile successfully.");
                         dispatch({
                             type: UPDATE_PROFILE_SUCCESS,
                             user: json.user
