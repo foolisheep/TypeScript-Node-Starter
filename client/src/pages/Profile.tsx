@@ -3,6 +3,7 @@ import connectPropsAndActions from "../utils/connect";
 import AppState from "../models/AppState";
 import ErrorPage from "./ErrorPage";
 import ActionCreator from "../models/ActionCreator";
+import { Gender } from "../../../models/User";
 
 interface Props {
     state: AppState;
@@ -15,14 +16,19 @@ class Profile extends React.Component<Props, States> {
     addressRef: RefObject<HTMLInputElement>;
     websiteRef: RefObject<HTMLInputElement>;
     nameRef: RefObject<HTMLInputElement>;
-    maleRef: RefObject<HTMLInputElement>;
+    tempGender: Gender;
     constructor(props: Props) {
         super(props);
         this.addressRef = React.createRef();
         this.websiteRef = React.createRef();
         this.nameRef = React.createRef();
-        this.maleRef = React.createRef();
+        this.tempGender = "male";
     }
+
+    componentDidUpdate() {
+        this.tempGender = this.props.state.user ? this.props.state.user.gender : this.tempGender;
+    }
+
     render(): React.ReactElement<any> {
         if (this.props.state.user) {
             return (
@@ -49,15 +55,20 @@ class Profile extends React.Component<Props, States> {
                                 <img className="profile" src={this.props.state.user.avatarUrl} width="100" height="100" alt={this.props.state.user.name} />
                             </div>
                         </div>
-                        <div className="form-group"><label className="col-sm-3 control-label">Gender</label>
+                        <div className="form-group">
+                            <label className="col-sm-3 control-label">Gender</label>
                             <div className="col-sm-6">
                                 <label className="radio radio-inline">
-                                    <input type="radio" ref={this.maleRef} defaultChecked={this.props.state.user.gender === "male"} name="gender" value="male" data-toggle="radio"/>
+                                    <input type="radio" defaultChecked={this.props.state.user.gender === "male"} onChange={this._updateGender} name="gender" value="male" data-toggle="radio"/>
                                     <span>Male</span>
                                 </label>
                                 <label className="radio radio-inline">
-                                    <input type="radio" defaultChecked={this.props.state.user.gender === "female"} name="gender" value="female" data-toggle="radio"/>
+                                    <input type="radio" defaultChecked={this.props.state.user.gender === "female"} onChange={this._updateGender} name="gender" value="female" data-toggle="radio"/>
                                     <span>Female</span>
+                                </label>
+                                <label className="radio radio-inline">
+                                    <input type="radio" defaultChecked={this.props.state.user.gender === "other"} onChange={this._updateGender} name="gender" value="other" data-toggle="radio"/>
+                                    <span>Other</span>
                                 </label>
                             </div>
                         </div>
@@ -96,9 +107,14 @@ class Profile extends React.Component<Props, States> {
             const address: any = this.addressRef.current && this.addressRef.current.value;
             const website: any = this.websiteRef.current && this.websiteRef.current.value;
             const name: any = this.nameRef.current && this.nameRef.current.value;
-            const gender: string = this.maleRef.current && this.maleRef.current.checked ? "male" : "female";
+            const gender: string = this.tempGender;
             const avatarUrl: string = this.props.state.user.avatarUrl;
             this.props.actions.updateProfile({email, name, gender, website, address, avatarUrl});
+        }
+    }
+    private _updateGender = (event: React.ChangeEvent<HTMLInputElement>): void => {
+        if (event.target.checked) {
+            this.tempGender = event.target.value as Gender;
         }
     }
 }

@@ -31,6 +31,7 @@ const actionCreator: ActionCreator = {
             .then((json: any) => {
                 if (json.user && json.accessToken) {
                     localStorage.setItem(ACCESS_TOKEN_KEY, json.accessToken);
+                    toast.success("Sign up successfully.");
                     dispatch({
                         type: CONSENT_REQUEST_SUCCESS,
                         user: json.user
@@ -45,6 +46,7 @@ const actionCreator: ActionCreator = {
         };
     },
     denyConsent (): Action {
+        toast.error("Please approve to finish signing up.");
         return {
             type: CONSENT_REQUEST_FAILED
         };
@@ -103,15 +105,15 @@ const actionCreator: ActionCreator = {
                 dispatch({ type: UPDATE_PROFILE_FAILED});
             } else {
                 fetch("/oauth2/profile", user, "POST", true)
-                .then((json: any) => {
-                    if (json.user) {
+                .then((json: User) => {
+                    if (json) {
                         toast.success("Update profile successfully.");
                         dispatch({
                             type: UPDATE_PROFILE_SUCCESS,
-                            user: json.user
+                            user: json
                         });
                     } else {
-                        console.error("null user profile");
+                        toast.error("Update profile failed.");
                         dispatch({ type: UPDATE_PROFILE_FAILED});
                     }
                 }, (error: Error) => {

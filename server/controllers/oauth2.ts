@@ -100,7 +100,7 @@ export const signUp: RequestHandler = (req: Request, res: Response, next: NextFu
     req.assert("password", "Password must be at least 4 characters long.").len({ min: 4 });
     req.assert("confirmPassword", "Passwords do not match.").equals(req.body.password);
     req.assert("name", "Name cannot be blank.").notEmpty();
-    req.assert("gender", "Gender is incorrect.").isIn(["male", "female"]);
+    req.assert("gender", "Gender is incorrect.").isIn(["male", "female", "other"]);
     req.sanitize("email").normalizeEmail({ gmail_remove_dots: false });
     // TODO: Validate more fields, and respond the error correctly
     // We only pick an error for user each time
@@ -111,7 +111,11 @@ export const signUp: RequestHandler = (req: Request, res: Response, next: NextFu
 
     let avatarUrl: string = req.body.avatarUrl;
     if (!avatarUrl) {
-        avatarUrl = `/images/avatars/${req.body.gender}_${random.getRandomInt(1, 8).toString()}.png`;
+        if (req.body.gender === "other") {
+            avatarUrl = "/images/avatars/other.png";
+        } else {
+            avatarUrl = `/images/avatars/${req.body.gender}_${random.getRandomInt(1, 8).toString()}.png`;
+        }
     }
     const user: UserDocument = new UserCollection({
         email: req.body.email,
@@ -177,8 +181,13 @@ export const profile: RequestHandler = (req: Request, res: Response, next: NextF
 export const updateProfile: RequestHandler = (req: Request, res: Response, next: NextFunction) => {
     req.assert("email", "Malicious attack is detected.").equals(req.user.email);
     req.assert("name", "Name cannot be blank.").notEmpty();
-    req.assert("avatarUrl", "Invalid url.").isURL();
-    req.assert("gender", "Gender is incorrect.").isIn(["male", "female"]);
+    req.assert("avatarUrl", "Invalid url.").matches("\/images\/avatars\/.*\.png");
+    req.assert("gender", "Gender is incorrect.").isIn(["male", "female", "other"]);
+    const errors: MappedError[] = req.validationErrors() as MappedError[];
+    if (errors && errors.length > 0) {
+        return res.status(400).json({ message: errors[0].msg });
+    }
+
     UserCollection.findOne({ email: req.body.email }, (err: Error, user: UserDocument) => {
         if (err) { return next(err); }
         if (!user) {
@@ -187,10 +196,9 @@ export const updateProfile: RequestHandler = (req: Request, res: Response, next:
         Object.assign(user, req.body);
         user.save((err: any) => {
             if (err) {
-                return next(err);
+                return res.status(500).json({ message: "Update failed." });
             }
             res.json(user);
         });
     });
-    // TODO: implement the real logic
 };
