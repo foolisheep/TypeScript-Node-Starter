@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import User from "../../../models/User";
+import User from "../../../client/src/models/User";
 export default interface UserDocument extends User, mongoose.Document {
     comparePassword: ComparePasswordFunction;
 }

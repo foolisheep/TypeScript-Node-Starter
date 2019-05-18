@@ -1,5 +1,5 @@
-export type Gender = "male" | "female" | "other";
-export default interface User {
+ import Gender from "./Gender";
+ export default interface User {
     email: string;
     password?: string;
     name: string;

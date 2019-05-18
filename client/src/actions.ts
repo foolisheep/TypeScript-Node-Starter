@@ -3,7 +3,7 @@ import { Dispatch, AnyAction as Action } from "redux";
 import fetch from "./utils/fetch";
 import { ACCESS_TOKEN_KEY } from "./constants";
 import { toast } from "react-toastify";
-import User from "../../models/User";
+import User from "./models/User";
 
 export const CONSENT_REQUEST_SUCCESS: string = "CONSENT_REQUEST_SUCCESS";
 export const CONSENT_REQUEST_FAILED: string = "CONSENT_REQUEST_FAILED";

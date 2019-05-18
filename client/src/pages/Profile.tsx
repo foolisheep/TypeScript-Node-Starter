@@ -3,7 +3,8 @@ import connectPropsAndActions from "../utils/connect";
 import AppState from "../models/AppState";
 import ErrorPage from "./ErrorPage";
 import ActionCreator from "../models/ActionCreator";
-import { Gender } from "../../../models/User";
+import Gender from "../models/Gender";
+import _ from "lodash";
 
 interface Props {
     state: AppState;
@@ -22,7 +23,7 @@ class Profile extends React.Component<Props, States> {
         this.addressRef = React.createRef();
         this.websiteRef = React.createRef();
         this.nameRef = React.createRef();
-        this.tempGender = "male";
+        this.tempGender = Gender.MALE;
     }
 
     componentDidUpdate() {
@@ -58,18 +59,9 @@ class Profile extends React.Component<Props, States> {
                         <div className="form-group">
                             <label className="col-sm-3 control-label">Gender</label>
                             <div className="col-sm-6">
-                                <label className="radio radio-inline">
-                                    <input type="radio" defaultChecked={this.props.state.user.gender === "male"} onChange={this._updateGender} name="gender" value="male" data-toggle="radio"/>
-                                    <span>Male</span>
-                                </label>
-                                <label className="radio radio-inline">
-                                    <input type="radio" defaultChecked={this.props.state.user.gender === "female"} onChange={this._updateGender} name="gender" value="female" data-toggle="radio"/>
-                                    <span>Female</span>
-                                </label>
-                                <label className="radio radio-inline">
-                                    <input type="radio" defaultChecked={this.props.state.user.gender === "other"} onChange={this._updateGender} name="gender" value="other" data-toggle="radio"/>
-                                    <span>Other</span>
-                                </label>
+                                {
+                                    Object.values(Gender).map((value: string) => this._renderGenderRadio(value))
+                                }
                             </div>
                         </div>
                         <div className="form-group">
@@ -99,7 +91,17 @@ class Profile extends React.Component<Props, States> {
             return <ErrorPage error={error} />;
         }
     }
-
+    private _renderGenderRadio = (gender: string): React.ReactElement<any> | undefined => {
+        return <label className="radio radio-inline">
+            <input type="radio" defaultChecked={!this.props.state.user || this.props.state.user.gender === gender} onChange={this._updateGender} name="gender" value={gender} data-toggle="radio"/>
+            <span>{_.upperFirst(gender)}</span>
+        </label>;
+    };
+    private _updateGender = (event: React.ChangeEvent<HTMLInputElement>): void => {
+        if (event.target.checked) {
+            this.tempGender = event.target.value as Gender;
+        }
+    }
     private _update = (): void => {
         if (this.props.state.user) {
             console.log("this._update is called");
@@ -107,14 +109,9 @@ class Profile extends React.Component<Props, States> {
             const address: any = this.addressRef.current && this.addressRef.current.value;
             const website: any = this.websiteRef.current && this.websiteRef.current.value;
             const name: any = this.nameRef.current && this.nameRef.current.value;
-            const gender: string = this.tempGender;
+            const gender: Gender = this.tempGender;
             const avatarUrl: string = this.props.state.user.avatarUrl;
             this.props.actions.updateProfile({email, name, gender, website, address, avatarUrl});
-        }
-    }
-    private _updateGender = (event: React.ChangeEvent<HTMLInputElement>): void => {
-        if (event.target.checked) {
-            this.tempGender = event.target.value as Gender;
         }
     }
 }
